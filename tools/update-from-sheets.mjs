@@ -92,11 +92,30 @@ function rangeToDeck({ values }) {
                     official: !!row[3].match("CAH"),
                 };
             }
-            let picks = row[0].match(/_+/g);
+
+            let pickCount = 1; // Default to 1 pick for black cards
+
+            // Check for explicit pick count like {1}, {2}, etc.
+            const explicitPickMatch = row[0].match(/\{(\d+)\}/);
+            if (explicitPickMatch) {
+                pickCount = parseInt(explicitPickMatch[1], 10);
+            } else if (row[0] === "Make a haiku.") {
+                // Special case for "Make a haiku."
+                pickCount = 3;
+            }
+            // For other cards with underscores (e.g., "You want _? You can't handle _[SAME CARD AGAIN]_!"),
+            // the default `pickCount = 1` handles them correctly as per the user's request.
+            // The previous `picks.length` logic that caused the issue is removed.
+
+            // console.log(`Processing card: "${row[0]}", calculated pickCount: ${pickCount}`); // Added for debugging
+
+            // Replace all sequences of underscores with a single underscore for the card text.
+            const cardText = replaceExoticChars(row[0].replace(/_+/g, "_"));
+
             return [
                 packMap[name].id,
-                replaceExoticChars(row[0].replace(/_+/g, "_")),
-                picks ? picks.length : row[0] == "Make a haiku." ? 3 : 1,
+                cardText,
+                pickCount,
             ];
         });
     }
