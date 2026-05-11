@@ -249,7 +249,7 @@ document.getElementById("download-text").addEventListener(
 );
 
 let deck;
-CAHDeck.fromCompact("https://raw.githubusercontent.com/crhallberg/json-against-humanity/latest/cah-all-compact.json").then((_deck) => {
+CAHDeck.fromCompact("https://raw.githubusercontent.com/FireRat666/json-against-humanity/latest/cah-all-compact.json").then((_deck) => {
   deck = _deck;
   cardCounts(_deck);
   deckCheckboxes(_deck);
