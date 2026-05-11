@@ -178,7 +178,7 @@ async function saveCardsToJSON(auth) { // Made async
             try {
                 await fs.writeFile( // Await the writeFile call
                     "./cah-all-compact.json", // Corrected path
-                    JSON.stringify({ white, black, packs: Object.values(packs) }, null, 2) // Added null, 2 for pretty printing
+                    JSON.stringify({ white, black, packs: Object.values(packs) })
                 );
                 console.log("cah-all-compact.json created successfully in the project root!");
             } catch (fileErr) {
