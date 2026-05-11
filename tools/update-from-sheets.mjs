@@ -114,7 +114,7 @@ function rangeToDeck({ values }) {
  * @see https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
  * @param {google.auth.OAuth2} auth The authenticated Google OAuth client.
  */
-function saveCardsToJSON(auth) {
+async function saveCardsToJSON(auth) { // Made async
     console.log("saveCardsToJSON(auth)");
     console.log("getting ranges...");
     const sheets = google.sheets({ version: "v4", auth });
@@ -123,7 +123,7 @@ function saveCardsToJSON(auth) {
             spreadsheetId: "1lsy7lIwBe-DWOi2PALZPf5DgXHx9MEvKfRw1GaWQkzg",
             ranges: ["Master Cards List!A:E", "Master Cards List!G:J"],
         },
-        (err, ranges) => {
+        async (err, ranges) => { // Made callback async
             if (err) return console.log("The API returned an error: " + err);
             console.log("parsing ranges...");
             let cards = ranges.data.valueRanges.map(rangeToDeck).flat();
@@ -164,7 +164,7 @@ function saveCardsToJSON(auth) {
                     let index = whiteIndexes.indexOf(textLower);
                     if (index === -1) {
                         white.push(card[1].trim());
-                        index = blackIndexes.length;
+                        index = whiteIndexes.length; // Corrected line
                         whiteIndexes.push(textLower);
                     }
                     packs[card[0]].white.push(index);
@@ -175,10 +175,15 @@ function saveCardsToJSON(auth) {
                 `saving... (${white.length} white, ${black.length} black)`
             );
 
-            fs.writeFile(
-                "../cah-all-compact.json",
-                JSON.stringify({ white, black, packs: Object.values(packs) })
-            );
+            try {
+                await fs.writeFile( // Await the writeFile call
+                    "./cah-all-compact.json", // Corrected path
+                    JSON.stringify({ white, black, packs: Object.values(packs) }, null, 2) // Added null, 2 for pretty printing
+                );
+                console.log("cah-all-compact.json created successfully in the project root!");
+            } catch (fileErr) {
+                console.error("Error writing cah-all-compact.json:", fileErr);
+            }
         }
     );
 }
