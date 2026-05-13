@@ -716,8 +716,8 @@ async function saveCardsToJSON(auth) {
 
         // --- MANUAL OVERRIDES FOR CARD COUNTS ---
         if (setName === "Cads About Matrimony Poly Pack") {
-            console.log(`Overriding Response Cards Count for "${setName}" from ${responseCardsCount} to 204.`);
-            responseCardsCount = 204;
+            console.log(`Overriding Response Cards Count for "${setName}" from ${responseCardsCount} to 319.`);
+            responseCardsCount = 319;
         } else if (setName === "Carps & Angsty Manatee - Volume 1") {
             console.log(`Overriding Prompt Cards Count for "${setName}" from ${promptCardsCount} to 20.`);
             promptCardsCount = 20;
@@ -736,8 +736,8 @@ async function saveCardsToJSON(auth) {
             responseCardsCount = 23;
             promptCardsCount = 2;
         } else if (setName === "Cards Against Humanity: Card Lab") {
-            console.log(`Overriding Response Cards Count for "${setName}" from ${responseCardsCount} to 284.`);
-            responseCardsCount = 284;
+            console.log(`Overriding Response Cards Count for "${setName}" from ${responseCardsCount} to 737.`);
+            responseCardsCount = 737;
         } else if (setName === "Cards Against Humanity: Everything Box Expansion") {
             console.log(`Overriding Prompt Cards Count for "${setName}" from ${promptCardsCount} to 50.`);
             promptCardsCount = 50;
