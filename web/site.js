@@ -49,8 +49,8 @@ function bindPackBtns(contEl = document) {
             selectedDecks.delete(btn.dataset.pack);
           }
         }
-        allBtn.classList.remove("is-checked");
-        officialBtn.classList.remove("is-checked");
+        // Uncheck all bulk buttons
+        document.querySelectorAll("#bulk-controls .deck-btn").forEach(b => b.classList.remove("is-checked"));
         tallySelected();
       },
       false
@@ -92,16 +92,32 @@ let officialBtn = document.getElementById("select-official");
 function deckCheckboxes(deck) {
   let packs = deck.listPacks();
   packs = packs.sort((a, b) => {
-    if (a.name == "CAH Base Set") {
-      return -1;
+    if (a.name == "CAH Base Set") return -1;
+    if (b.name == "CAH Base Set") return 1;
+    // Sort by sheetName primarily
+    const aSheet = a.sheetName || "";
+    const bSheet = b.sheetName || "";
+    if (aSheet !== bSheet) {
+      return aSheet.localeCompare(bSheet);
     }
-    if (b.name == "CAH Base Set") {
-      return 1;
-    }
-    if (a.official != b.official) {
-      return a.official ? -1 : 1;
-    }
-    return a.name < b.name ? -1 : 1;
+    // Then sort by name secondarily
+    return a.name.localeCompare(b.name);
+  });
+
+  // Identify unique sheets for bulk controls
+  const uniqueSheets = [...new Set(packs.map(p => p.sheetName).filter(Boolean))].sort();
+  const bulkList = document.querySelector("#bulk-controls .deck-list");
+  
+  // Clear existing sheet buttons if any (to avoid duplicates)
+  bulkList.querySelectorAll(".sheet-btn").forEach(btn => btn.parentElement.remove());
+  
+  uniqueSheets.forEach(sheet => {
+    const li = document.createElement("li");
+    li.className = "deck";
+    li.innerHTML = `<button class="deck-btn sheet-btn" data-sheet="${sheet}">
+      <i class="deck-icon far fa-fw fa-square"></i> Select ${sheet}
+    </button>`;
+    bulkList.appendChild(li);
   });
 
   let html = '<ul class="deck-list">';
@@ -109,7 +125,7 @@ function deckCheckboxes(deck) {
     html += `<li class="deck">
       <button class="deck-btn${
         pack.official ? " is-official is-checked" : ""
-      }" data-pack="${pack.id}"><i class="deck-icon fa fa-fw fa-${
+      }" data-pack="${pack.id}" data-sheet="${pack.sheetName || ""}"><i class="deck-icon fa fa-fw fa-${
       pack.icon
     }"></i> ${pack.name}</button>
     </li>`;
@@ -120,32 +136,37 @@ function deckCheckboxes(deck) {
   decksEl.innerHTML = html + "</ul>";
   bindPackBtns(decksEl);
 
-  function toggleBtn(mainBtn, query, otherBtn) {
-    let deckBtns = decksEl.querySelectorAll(query);
-    let allBtns = decksEl.querySelectorAll(".deck-btn");
-    mainBtn.addEventListener(
-      "click",
-      function toggleOfficial() {
-        mainBtn.classList.toggle("is-checked");
-        otherBtn.classList.remove("is-checked");
-        allBtns.forEach((btn) => {
-          selectedDecks.delete(btn.dataset.pack);
-          btn.classList.remove("is-checked");
-        });
-        if (mainBtn.classList.contains("is-checked")) {
-          deckBtns.forEach((btn) => {
-            selectedDecks.add(btn.dataset.pack);
-            btn.classList.add("is-checked");
+  function setupBulkControls() {
+    const allBtns = decksEl.querySelectorAll(".deck-btn");
+    const bulkBtns = document.querySelectorAll("#bulk-controls .deck-btn");
+
+    bulkBtns.forEach(mainBtn => {
+      mainBtn.addEventListener("click", () => {
+        const isChecked = mainBtn.classList.toggle("is-checked");
+        
+        let query = "";
+        if (mainBtn.id === "select-all") query = ".deck-btn";
+        else if (mainBtn.id === "select-official") query = ".deck-btn.is-official";
+        else if (mainBtn.dataset.sheet) query = `.deck-btn[data-sheet="${mainBtn.dataset.sheet}"]`;
+
+        if (query) {
+          const targets = decksEl.querySelectorAll(query);
+          targets.forEach(btn => {
+            if (isChecked) {
+              selectedDecks.add(btn.dataset.pack);
+              btn.classList.add("is-checked");
+            } else {
+              selectedDecks.delete(btn.dataset.pack);
+              btn.classList.remove("is-checked");
+            }
           });
         }
         tallySelected();
-      },
-      false
-    );
+      });
+    });
   }
 
-  toggleBtn(allBtn, ".deck-btn", officialBtn);
-  toggleBtn(officialBtn, ".deck-btn.is-official", allBtn);
+  setupBulkControls();
 
   let mobileDeckToggle = document.querySelector(".mobile-toggle");
   mobileDeckToggle.addEventListener(
@@ -249,7 +270,7 @@ document.getElementById("download-text").addEventListener(
 );
 
 let deck;
-CAHDeck.fromCompact("https://raw.githubusercontent.com/FireRat666/json-against-humanity/latest/cah-all-compact.json").then((_deck) => {
+CAHDeck.fromCompact("./cah-all-compact.json").then((_deck) => {
   deck = _deck;
   cardCounts(_deck);
   deckCheckboxes(_deck);
