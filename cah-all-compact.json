@@ -103285,6 +103285,10 @@
       "pick": 1
     },
     {
+      "text": "You know what's, like, really funny when you think about it? _.",
+      "pick": 1
+    },
+    {
       "text": "\"They're bringing drugs. They're bringing crime. They're rapists. And some, I assume, are _.\"",
       "pick": 1
     },
@@ -104137,7 +104141,106 @@
     "Sympathy for Losers: The player with the least amount of points may submit up to three cards this round.",
     "Thievery: The Card Czar gets to steal one point from any player.",
     "(Slap the person with the most black cards)",
-    "You know what's, like, really funny when you think about it? ___."
+    "< Ain't Broke - Needs Fixing >",
+    "< Alpha Male - Beta Cuck >",
+    "< Amazing Travel Experience - Vacation from Hell >",
+    "< American - Unamerican >",
+    "< Appropriate - Inappropriate >",
+    "< Art - Not Art >",
+    "< Awesome Superpower - Crappy Superpower >",
+    "< Basic Bitch - Not Like the Other Girls >",
+    "< Before Sex - After Sex >",
+    "< Better on LSD - Worse on LSD >",
+    "< Boomer - Zoomer >",
+    "< Brave - Cowardly >",
+    "< Call 911 - Deal With It Myself >",
+    "< Cause for Concern - No Biggie >",
+    "< Cheap Thrill - Profound Experience >",
+    "< City - Country >",
+    "< Classy - Trashy >",
+    "< Clean - Messy >",
+    "< Comfortable - Uncomfortable >",
+    "< Convenient -  Inconvenient >",
+    "< Cool - Uncool >",
+    "< Could Be An Olympic Sport - Probably Not An Olympic Sport >",
+    "< Democrat - Republican >",
+    "< Easy - Difficult >",
+    "< Extremely Viral Video - Not That Viral Video >",
+    "< Father Would Be Proud - Father Would Be Disappointed >",
+    "< Feminist - Misogynist >",
+    "< First Date - Year 20 of Marriage >",
+    "< First Hour of the Party - Last Hour of the Party >",
+    "< First Place Science Fair Project - Last Place Science Fair Project >",
+    "< Food - Not Food >",
+    "< For White People - Not For White People >",
+    "< Forgettable - Unforgettable >",
+    "< Found in Heaven - Found in Hell >",
+    "< Friend - Foe >",
+    "< Fun for the Whole Family - Just Fun for Dad >",
+    "< Gay - Straight >",
+    "< Good Band Name - Bad Band Name >",
+    "< Good Cards Against Humanity Card - Bad Cards Against Humanity Card >",
+    "< Good for Political Career - Bad for Political Career >",
+    "< Good for Your Marriage - Bad for Your Marriage >",
+    "< Good in Butt - Bad in Butt >",
+    "< Gorilla Would Like It - Would Scare Gorilla >",
+    "< Great Business Idea - Bad Business Idea >",
+    "< Great Conversation Topic at Thanksgiving - Awkward Conversation Topic at Thanksgiving >",
+    "< Great Excuse for Being Late - Poor Excuse for Being Late >",
+    "< Great Fun at the Beach - The Beach Is Now Closed >",
+    "< Great Workout - Bad Workout >",
+    "< Healthy - Unhealthy >",
+    "< Hell Yes - Fuck No >",
+    "< Hitting Rock Bottom - Living My Best Life >",
+    "< Hobby - Career >",
+    "< Honorable Death - Shameful Death >",
+    "< I Was Drunk - I Was High >",
+    "< Impressive - Not Impressive >",
+    "< Impressive on Resume - Makes You Unhirable >",
+    "< In My Youth - In My Old Age >",
+    "< Innovative Idea - Everyone's Already Doing It >",
+    "< Jesus Would Do - Jesus Would Not Do >",
+    "< Kids Love It - Kids Don't Love It >",
+    "< Makes Dog Happy - Makes Husband Happy >",
+    "< Masculine - Feminine >",
+    "< More Physically Demanding - More Emotionally Demanding >",
+    "< Most Views on Pornhub - Least Views on Pornhub >",
+    "< My Most Treasured Memory - My Deepest Regret >",
+    "< Name of Cocktail I Would Drink - Name of Cocktail I Would Not Drink >",
+    "< Okay to Joke About - Not Okay to Joke About >",
+    "< Order - Chaos >",
+    "< Painless - Painful >",
+    "< Pleases God - Angers God >",
+    "< Reality TV - Prestige Drama >",
+    "< Red Flag - Green Light >",
+    "< Relaxing - Stimulating >",
+    "< Romantic - Not Romantic >",
+    "< Safe - Dangerous >",
+    "< Scary Halloween Costume - Sexy Halloween Costume >",
+    "< Sets Kids Up For Failure - Sets Kids Up for Success >",
+    "< Sex - Not Sex >",
+    "< Simple - Complicated >",
+    "< Small - Big >",
+    "< Smart - Dumb >",
+    "< Smells Good - Smells Bad >",
+    "< Start of a Good Night - Start of a Bad Night >",
+    "< Takes Forever - Over Too Soon >",
+    "< Tears of Joy - Tears of Sadness >",
+    "< That's So Me - That's So Not Me >",
+    "< Title of Comedy Film - Title of Horror Film >",
+    "< Trendy - Timeless >",
+    "< Trump Claims He Did It - Trump Actually Did It >",
+    "< Unacceptable in the Workplace - Gets You Promoted >",
+    "< Unfairly Stigmatized - Rightly Stigmatized >",
+    "< Wedding Ruined - Wedding Improved >",
+    "< Weird - Normal >",
+    "< Wins Friends and Influences People - Loses Friends and Alienates People >",
+    "< Worth the Money - Not Worth the Money >",
+    "< Would Be Awesome Broadway Musical - Would Be Terrible Broadway Musical >",
+    "< Would Fuck - Would Not Fuck >",
+    "< Would Help You Survive Zombie Apocalypse - Would Get You Killed in the First 10 Minutes >",
+    "< Would Improve Star Wars Universe - Would Make Star Wars Worse >",
+    "< Would Masturbate To - Would Not Masturbate To >"
   ],
   "packs": [
     {
@@ -123656,11 +123759,11 @@
         811
       ],
       "black": [
-        14048,
         14049,
         14050,
         14051,
-        14052
+        14052,
+        14053
       ],
       "mechanic": [],
       "official": true,
@@ -123732,7 +123835,6 @@
         46359
       ],
       "black": [
-        14060,
         14061,
         14062,
         14063,
@@ -123740,7 +123842,8 @@
         14065,
         14066,
         14067,
-        14068
+        14068,
+        14069
       ],
       "mechanic": [],
       "official": true,
@@ -123775,13 +123878,13 @@
         46591
       ],
       "black": [
-        14137,
         14138,
         14139,
         14140,
         14141,
         14142,
-        14143
+        14143,
+        14144
       ],
       "mechanic": [],
       "official": true,
@@ -123816,12 +123919,12 @@
         46776
       ],
       "black": [
-        14195,
         14196,
         14197,
         14198,
         14199,
-        14200
+        14200,
+        14201
       ],
       "mechanic": [],
       "official": true,
@@ -124837,11 +124940,11 @@
         47107
       ],
       "black": [
-        14233,
         14234,
         14235,
         14236,
-        14237
+        14237,
+        14238
       ],
       "mechanic": [],
       "official": true,
@@ -124960,12 +125063,12 @@
         46517
       ],
       "black": [
-        14106,
         14107,
         14108,
         14109,
         14110,
-        14111
+        14111,
+        14112
       ],
       "mechanic": [],
       "official": true,
@@ -124995,11 +125098,11 @@
         46650
       ],
       "black": [
-        14161,
         14162,
         14163,
         14164,
-        14165
+        14165,
+        14166
       ],
       "mechanic": [],
       "official": true,
@@ -125143,13 +125246,13 @@
         46609
       ],
       "black": [
-        14172,
-        14077,
         14173,
+        14078,
         14174,
         14175,
         14176,
-        14147
+        14177,
+        14148
       ],
       "mechanic": [],
       "official": true,
@@ -125184,13 +125287,13 @@
         46476
       ],
       "black": [
-        14092,
         14093,
         14094,
         14095,
         14096,
         14097,
-        14098
+        14098,
+        14099
       ],
       "mechanic": [],
       "official": true,
@@ -125287,9 +125390,9 @@
         46523
       ],
       "black": [
-        14112,
         14113,
-        14114
+        14114,
+        14115
       ],
       "mechanic": [],
       "official": true,
@@ -125626,7 +125729,6 @@
         46621
       ],
       "black": [
-        14148,
         14149,
         14150,
         14151,
@@ -125634,7 +125736,8 @@
         14153,
         14154,
         14155,
-        14156
+        14156,
+        14157
       ],
       "mechanic": [],
       "official": true,
@@ -125673,8 +125776,8 @@
         46317
       ],
       "black": [
-        14053,
-        14054
+        14054,
+        14055
       ],
       "mechanic": [],
       "official": true,
@@ -125727,11 +125830,11 @@
         46800
       ],
       "black": [
-        14201,
         14202,
         14203,
         14204,
-        14205
+        14205,
+        14206
       ],
       "mechanic": [],
       "official": true,
@@ -125752,10 +125855,10 @@
         46631
       ],
       "black": [
-        14157,
         14158,
         14159,
-        14160
+        14160,
+        14161
       ],
       "mechanic": [],
       "official": true,
@@ -126432,7 +126535,7 @@
         46736
       ],
       "black": [
-        14182
+        14183
       ],
       "mechanic": [],
       "official": true,
@@ -126593,7 +126696,108 @@
         44952
       ],
       "black": [],
-      "mechanic": [],
+      "mechanic": [
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        130,
+        131,
+        132,
+        133,
+        134,
+        135,
+        136,
+        137,
+        138,
+        139,
+        140,
+        141,
+        142,
+        143,
+        144,
+        145,
+        146,
+        147,
+        148,
+        149,
+        150,
+        151,
+        152,
+        153,
+        154,
+        155,
+        156,
+        157,
+        158,
+        159,
+        160,
+        161,
+        162
+      ],
       "official": true,
       "sheetName": "CAH Expansions"
     },
@@ -126634,8 +126838,8 @@
         46367
       ],
       "black": [
-        14069,
-        14070
+        14070,
+        14071
       ],
       "mechanic": [],
       "official": true,
@@ -126655,7 +126859,7 @@
       ],
       "black": [
         5342,
-        14144
+        14145
       ],
       "mechanic": [],
       "official": true,
@@ -126674,8 +126878,8 @@
         18108
       ],
       "black": [
-        14206,
-        14207
+        14207,
+        14208
       ],
       "mechanic": [],
       "official": true,
@@ -126708,11 +126912,11 @@
         46389
       ],
       "black": [
-        14071,
         14072,
         14073,
         14074,
-        14075
+        14075,
+        14076
       ],
       "mechanic": [],
       "official": true,
@@ -126731,7 +126935,7 @@
         46603
       ],
       "black": [
-        14145,
+        14146,
         4111
       ],
       "mechanic": [],
@@ -126802,11 +127006,11 @@
         46810
       ],
       "black": [
-        14208,
         14209,
         14210,
         14211,
-        14212
+        14212,
+        14213
       ],
       "mechanic": [],
       "official": true,
@@ -126922,7 +127126,7 @@
         46953
       ],
       "black": [
-        14220
+        14221
       ],
       "mechanic": [],
       "official": true,
@@ -126961,8 +127165,8 @@
         46397
       ],
       "black": [
-        14076,
-        14077
+        14077,
+        14078
       ],
       "mechanic": [],
       "official": true,
@@ -126981,8 +127185,8 @@
         46610
       ],
       "black": [
-        14146,
-        14147
+        14147,
+        14148
       ],
       "mechanic": [],
       "official": true,
@@ -127051,7 +127255,6 @@
         46548
       ],
       "black": [
-        14117,
         14118,
         14119,
         14120,
@@ -127062,7 +127265,8 @@
         14125,
         14126,
         14127,
-        14128
+        14128,
+        14129
       ],
       "mechanic": [],
       "official": true,
@@ -127091,7 +127295,6 @@
         46752
       ],
       "black": [
-        14183,
         14184,
         14185,
         14186,
@@ -127102,7 +127305,8 @@
         14191,
         14192,
         14193,
-        14194
+        14194,
+        14195
       ],
       "mechanic": [],
       "official": true,
@@ -127135,14 +127339,14 @@
         46570
       ],
       "black": [
-        14129,
         14130,
         14131,
         14132,
         14133,
         14134,
         14135,
-        14136
+        14136,
+        14137
       ],
       "mechanic": [],
       "official": true,
@@ -127161,8 +127365,8 @@
         46531
       ],
       "black": [
-        14115,
-        14116
+        14116,
+        14117
       ],
       "mechanic": [],
       "official": true,
@@ -127198,11 +127402,11 @@
         46728
       ],
       "black": [
-        14177,
         14178,
         14179,
         14180,
-        14181
+        14181,
+        14182
       ],
       "mechanic": [],
       "official": true,
@@ -127547,7 +127751,7 @@
         47073
       ],
       "black": [
-        14227
+        14228
       ],
       "mechanic": [],
       "official": true,
@@ -127616,16 +127820,16 @@
         46419
       ],
       "black": [
-        14078,
         14079,
         14080,
         14081,
         14082,
         14083,
         14084,
-        1903,
         14085,
-        14086
+        1903,
+        14086,
+        14087
       ],
       "mechanic": [],
       "official": true,
@@ -127659,8 +127863,8 @@
         46453
       ],
       "black": [
-        14090,
-        14091
+        14091,
+        14092
       ],
       "mechanic": [],
       "official": true,
@@ -127705,7 +127909,7 @@
         46839
       ],
       "black": [
-        14216
+        14217
       ],
       "mechanic": [],
       "official": true,
@@ -127742,14 +127946,14 @@
         46254
       ],
       "black": [
-        14041,
-        14217,
-        14046,
         14042,
-        14044,
-        14043,
+        14218,
         14047,
-        14045
+        14043,
+        14045,
+        14044,
+        14048,
+        14046
       ],
       "mechanic": [],
       "official": true,
@@ -127783,13 +127987,13 @@
         46265
       ],
       "black": [
-        14041,
         14042,
         14043,
         14044,
         14045,
         14046,
-        14047
+        14047,
+        14048
       ],
       "mechanic": [],
       "official": true,
@@ -127825,11 +128029,11 @@
         30744
       ],
       "black": [
-        14055,
         14056,
         14057,
         14058,
-        14059
+        14059,
+        14060
       ],
       "mechanic": [],
       "official": true,
@@ -127863,13 +128067,13 @@
         46672
       ],
       "black": [
-        14166,
-        4029,
         14167,
+        4029,
         14168,
         14169,
         14170,
-        14171
+        14171,
+        14172
       ],
       "mechanic": [],
       "official": true,
@@ -127903,13 +128107,13 @@
         7336
       ],
       "black": [
-        14099,
         14100,
         14101,
         14102,
         14103,
         14104,
-        14105
+        14105,
+        14106
       ],
       "mechanic": [],
       "official": true,
@@ -127943,13 +128147,13 @@
         46358
       ],
       "black": [
-        14061,
-        14218,
-        14064,
+        14062,
         14219,
+        14065,
+        14220,
         13993,
         13995,
-        14068
+        14069
       ],
       "mechanic": [],
       "official": true,
@@ -127972,9 +128176,9 @@
         46822
       ],
       "black": [
-        14213,
         14214,
-        14215
+        14215,
+        14216
       ],
       "mechanic": [],
       "official": true,
@@ -128010,11 +128214,11 @@
         47098
       ],
       "black": [
-        14228,
         14229,
         14230,
         14231,
-        14232
+        14232,
+        14233
       ],
       "mechanic": [],
       "official": true,
@@ -128052,9 +128256,9 @@
         47013
       ],
       "black": [
-        14224,
         14225,
-        14226
+        14226,
+        14227
       ],
       "mechanic": [],
       "official": true,
@@ -128087,9 +128291,9 @@
         46975
       ],
       "black": [
-        14221,
         14222,
-        14223
+        14223,
+        14224
       ],
       "mechanic": [],
       "official": true,
@@ -128137,9 +128341,9 @@
         46435
       ],
       "black": [
-        14087,
         14088,
-        14089
+        14089,
+        14090
       ],
       "mechanic": [],
       "official": true,
@@ -128178,11 +128382,10 @@
         14037,
         14038,
         14039,
-        14040
+        14040,
+        14041
       ],
-      "mechanic": [
-        63
-      ],
+      "mechanic": [],
       "official": true,
       "sheetName": "CAH Packs"
     },
