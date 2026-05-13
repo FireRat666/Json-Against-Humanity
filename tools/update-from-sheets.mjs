@@ -137,16 +137,13 @@ function extractCardsFromSetBlock(sheetValues, setInfo) {
 
             // --- OVERRIDE FOR MISLABELED CARDS ---
             let effectiveLabel = cellContent;
-            if (packName === "Disgruntled Decks: Air Force Edition" && setInfo.sheetName === "Stand Alone Games") {
-                // Rows 5645 to 5949 (0-indexed: 5644 to 5948) are response cards mislabeled as "Prompt"
-                if (r >= 5644 && r <= 5948) {
-                    effectiveLabel = "response";
-                }
-            } else if (packName === "Cards Against Humanity  Nasty Bundle: A Few Extra Nasty Cards For You People" && setInfo.sheetName === "CAH Packs") {
-                // This pack mislabels its 10 response cards as "Prompt"
-                if (effectiveLabel === "prompt") {
-                    effectiveLabel = "response";
-                }
+            if (effectiveLabel === "line") {
+                effectiveLabel = "mechanic";
+            }
+            if (packName === "PACKNAMEGOESHERE" && setInfo.sheetName === "Stand Alone Games") {
+                if (r >= 5644 && r <= 5948) { effectiveLabel = "response"; }
+            } else if (packName === "PACKNAMEGOESHERE" && setInfo.sheetName === "CAH Packs") {
+                if (effectiveLabel === "prompt") { effectiveLabel = "response"; }
             }
             // --- END OVERRIDE ---
 
@@ -178,10 +175,13 @@ function extractCardsFromSetBlock(sheetValues, setInfo) {
             const labelCellContent = (cardRow && cardRow.length > startCol) ? String(cardRow[startCol] || '').trim().toLowerCase() : '';
             const cardText = (cardRow && cardRow.length > startCol + 1) ? String(cardRow[startCol + 1] || '').trim() : '';
 
+            // Normalize "line" to "mechanic"
+            const effectiveLabel = labelCellContent === "line" ? "mechanic" : labelCellContent;
+
             // Stop conditions:
             // 1. We encounter a 'set' label in the label column
-            if (labelCellContent === "set") {
-                if (isDebuggingThisSet) console.log(`  Mechanic Card (Row ${r + 1}, Col ${startCol + 1}): (Stopping due to label "${labelCellContent}")`);
+            if (effectiveLabel === "set") {
+                if (isDebuggingThisSet) console.log(`  Mechanic Card (Row ${r + 1}, Col ${startCol + 1}): (Stopping due to label "${effectiveLabel}")`);
                 break;
             }
 
@@ -193,7 +193,7 @@ function extractCardsFromSetBlock(sheetValues, setInfo) {
             }
 
             // Only add if there's actual card text and the label is "mechanic"
-            if (cardText && labelCellContent === "mechanic") {
+            if (cardText && effectiveLabel === "mechanic") {
                 cardsForSet.push([
                     packId,
                     replaceExoticChars(cardText),
@@ -220,16 +220,10 @@ function extractCardsFromSetBlock(sheetValues, setInfo) {
 
             // --- OVERRIDE FOR MISLABELED CARDS ---
             let effectiveLabel = labelCellContent;
-            if (packName === "Disgruntled Decks: Air Force Edition" && setInfo.sheetName === "Stand Alone Games") {
-                // Rows 5645 to 5949 (0-indexed: 5644 to 5948) are response cards mislabeled as "Prompt"
-                if (r >= 5644 && r <= 5948) {
-                    effectiveLabel = "response";
-                }
-            } else if (packName === "Cards Against Humanity  Nasty Bundle: A Few Extra Nasty Cards For You People" && setInfo.sheetName === "CAH Packs") {
-                // This pack mislabels its 10 response cards as "Prompt"
-                if (effectiveLabel === "prompt") {
-                    effectiveLabel = "response";
-                }
+            if (packName === "PACKNAMEGOESHERE" && setInfo.sheetName === "Stand Alone Games") {
+                if (r >= 5644 && r <= 5948) { effectiveLabel = "response"; }
+            } else if (packName === "PACKNAMEGOESHERE" && setInfo.sheetName === "CAH Packs") {
+                if (effectiveLabel === "prompt") { effectiveLabel = "response"; }
             }
             // --- END OVERRIDE ---
 
@@ -302,16 +296,10 @@ function extractCardsFromSetBlock(sheetValues, setInfo) {
 
             // --- OVERRIDE FOR MISLABELED CARDS ---
             let effectiveLabel = labelCellContent;
-            if (packName === "Disgruntled Decks: Air Force Edition" && setInfo.sheetName === "Stand Alone Games") {
-                // Rows 5645 to 5949 (0-indexed: 5644 to 5948) are response cards mislabeled as "Prompt"
-                if (r >= 5644 && r <= 5948) {
-                    effectiveLabel = "response";
-                }
-            } else if (packName === "Cards Against Humanity  Nasty Bundle: A Few Extra Nasty Cards For You People" && setInfo.sheetName === "CAH Packs") {
-                // This pack mislabels its 10 response cards as "Prompt"
-                if (effectiveLabel === "prompt") {
-                    effectiveLabel = "response";
-                }
+            if (packName === "PACKNAMEGOESHERE" && setInfo.sheetName === "Stand Alone Games") {
+                if (r >= 5644 && r <= 5948) { effectiveLabel = "response"; }
+            } else if (packName === "PACKNAMEGOESHERE" && setInfo.sheetName === "CAH Packs") {
+                if (effectiveLabel === "prompt") { effectiveLabel = "response"; }
             }
             // --- END OVERRIDE ---
 
@@ -360,7 +348,7 @@ function extractCardsFromSetBlock(sheetValues, setInfo) {
 }
 
 
-const SPREADSHEET_ID = "1lsy7lIwBe-DWOi2PALZPf5DgXHx9MEvKfRw1GaWQkzg"; // Your main spreadsheet ID
+const SPREADSHEET_ID = "1Pp04v9plwiJwg8u-DrCHd4Fsf9ro3NhxOvISwc0bC4Y"; // Your main spreadsheet ID
 
 async function saveCardsToJSON(auth) {
     console.log("saveCardsToJSON(auth)");
@@ -407,8 +395,9 @@ async function saveCardsToJSON(auth) {
     const SET_NAME_COL_INDEX = 0;
     const SHEET_NAME_COL_INDEX = 2;
     const STARTING_CELL_COL_INDEX = 4;
-    const PROMPT_CARDS_COUNT_COL_INDEX = 5;
-    const RESPONSE_CARDS_COUNT_COL_INDEX = 6;
+    const MECHANIC_CARDS_COUNT_COL_INDEX = 5;
+    const PROMPT_CARDS_COUNT_COL_INDEX = 6; // 6 for New Spreadsheet, 5 for Old
+    const RESPONSE_CARDS_COUNT_COL_INDEX = 7; // 7 for New Spreadsheet, 6 for Old
 
     for (let i = 1; i < indexRows.length; i++) { // Skip header row
         const row = indexRows[i];
@@ -419,344 +408,25 @@ async function saveCardsToJSON(auth) {
         const setName = String(row[SET_NAME_COL_INDEX] || '').trim();
         let sheetName = String(row[SHEET_NAME_COL_INDEX] || '').trim(); // Use let for potential override
         let startingCell = String(row[STARTING_CELL_COL_INDEX] || '').trim(); // Use let for potential override
+        let mechanicCardsCount = parseInt(row[MECHANIC_CARDS_COUNT_COL_INDEX] || '0', 10); // Use let for potential override
         let promptCardsCount = parseInt(row[PROMPT_CARDS_COUNT_COL_INDEX] || '0', 10); // Use let for potential override
         let responseCardsCount = parseInt(row[RESPONSE_CARDS_COUNT_COL_INDEX] || '0', 10); // Use let for potential override
 
         // --- MANUAL OVERRIDES FOR STARTING CELLS ---
-        if (setName === "Cards Against Coachella") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "E1144".`);
-            startingCell = "E1144"; // Corrected starting cell
-        } else if (setName === "Humanity Hates Trump: Kickstarter Promo Cards") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "G7957".`);
-            startingCell = "G7957";
-        } else if (setName === "Humanity Hates Trump: Expansion Pack 1") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "M7957".`);
-            startingCell = "M7957";
-        } else if (setName === "Humanity Hates Trump: Expansion Pack 2 - Humanity Hates Hillary, Too") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "S7957".`);
-            startingCell = "S7957";
-        } else if (setName === "Humanity Hates Trump: Expansion Pack 2 - Humanity Hates Hillary, Too") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "S7957".`);
-            startingCell = "S7957";
-        } else if (setName === "Disgruntled Decks: Army Edition") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "A5550".`);
-            startingCell = "A5550";
-        } else if (setName === "Disgruntled Decks: Air Force Edition") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "Y5550".`);
-            startingCell = "Y5550";
-        } else if (setName === "Disgruntled Decks: Navy Edition") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "S5550".`);
-            startingCell = "S5550";
-        } else if (setName === "Disgrunteld Decks: Marine Corps/Jarhead Edition") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "G5550".`);
-            startingCell = "G5550";
-        } else if (setName === "Cards Against Humanity: Hidden Compartment Pack") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "AE543".`);
-            startingCell = "AE543";
-        } else if (setName === "Cards Against Humanity: Theatre Pack - CATS Musical Pack") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "AE569".`);
-            startingCell = "AE569";
-        } else if (setName === "Cards Against Humanity: Trump Bug Out Bag/Post-Trump Pack") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "AE503".`);
-            startingCell = "AE503";
-        } else if (setName === "Cards Against Humanity: PAX Prime 2014 Custom Printed Cards") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "AE389".`);
-            startingCell = "AE389";
-        } else if (setName === "Cards Against Humanity: Seasons Greetings Pack") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "AE324".`);
-            startingCell = "AE324";
-        } else if (setName === "Cards Against Humanity  Nasty Bundle: A Few Extra Nasty Cards For You People") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "AG201".`);
-            startingCell = "AG201";
-        } else if (setName === "Cards Against Humanity: ClickHole Greeting Cards Pack (Target Exclusive)") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "AG162".`);
-            startingCell = "AG162";
-        } else if (setName === "Cards Against Humanity: Theatre Pack") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "AG124".`);
-            startingCell = "AG124";
-        } else if (setName === "Cards Against Humanity: Saves America Pack") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "Z569".`);
-            startingCell = "Z569"; // Z569 is currently the NON Store version
-        } else if (setName === "Cards Against Humanity: Retail Product Pack") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "Z543".`);
-            startingCell = "Z543";
-        } else if (setName === "Cards Against Humanity: Tabletop Pack") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "Z503".`);
-            startingCell = "Z503";
-        } else if (setName === "Cards Against Humanity: Gen Con 2018 Midterm Elections Pack") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "Z439".`);
-            startingCell = "Z439";
-        } else if (setName === "Cards Against Humanity: PAX Prime 2014 - Panel Cards") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "Z389".`);
-            startingCell = "Z389";
-        } else if (setName === "Cards Against Humanity: PAX East 2013 Promo Pack C") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "Z369".`);
-            startingCell = "Z369";
-        } else if (setName === "Cards Against Humanity: Jew Pack/Chosen People Pack") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "Z324".`);
-            startingCell = "Z324";
-        } else if (setName === "Cards Against Humanity: Picture Card Pack 2") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "Z209".`);
-            startingCell = "Z209";
-        } else if (setName === "Cards Against Humanity: Nerd Bundle: A Few More Cards For You Nerds (Target Exclusive)") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "Z170".`);
-            startingCell = "Z170";
-        } else if (setName === "Cards Against Humanity: Pride Pack") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "Z129".`);
-            startingCell = "Z129";
-        } else if (setName === "Cards Against Humanity: Design Pack") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "Z93".`);
-            startingCell = "Z93";
-        } else if (setName === "Cards Against Humanity: Food Pack") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "Z47".`);
-            startingCell = "Z47";
-        } else if (setName === "Cards Against Humanity: Sci-Fi Pack") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "Z4".`);
-            startingCell = "Z4";
-        } else if (setName === "Cards Against Humanity: Desert Bus For Hope Pack") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "R569".`);
-            startingCell = "R569";
-        } else if (setName === "Cards Against Humanity: Mass Effect Pack") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "R543".`);
-            startingCell = "R543";
-        } else if (setName === "Cards Against Humanity: House of Cards Pack") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "R503".`);
-            startingCell = "R503";
-        } else if (setName === "Cards Against Humanity: PAX Prime 2015 Food Pack C (Cherry)") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "R439".`);
-            startingCell = "R439";
-        } else if (setName === "Cards Against Humanity: Picture Card Pack 1") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "R209".`);
-            startingCell = "R209";
-        } else if (setName === "Cards Against Humanity: PAX East 2014 - Panel Cards") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "R389".`);
-            startingCell = "R389";
-        } else if (setName === "Cards Against Humanity: PAX East 2013 Promo Pack B") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "R369".`);
-            startingCell = "R369";
-        } else if (setName === "Cards Against Humanity: 2014 Holiday Pack") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "R324".`);
-            startingCell = "R324";
-        } else if (setName === "Cards Against Humanity: HIdden Gems Bundle: A Few New Cards We Crammed Into This Bundle Pack (Amazon Exclusive)") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "R170".`);
-            startingCell = "R170";
-        } else if (setName === "Cards Against Humanity: Dad Pack") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "R129".`);
-            startingCell = "R129";
-        } else if (setName === "Cards Against Humanity: Blackbox Press Kit") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "R93".`);
-            startingCell = "R93";
-        } else if (setName === "Cards Against Humanity: Science Pack") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "R47".`);
-            startingCell = "R47";
-        } else if (setName === "Cards Against Humanity: Geek Pack") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "R4".`);
-            startingCell = "R4";
-        } else if (setName === "Cards Against Humanity: Reject Pack 3") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "I625".`);
-            startingCell = "I625";
-        } else if (setName === "Cards Against Humanity: Vote For Trump Pack") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "I569".`);
-            startingCell = "I569";
-        } else if (setName === "Cards Against Humanity: Hanukkah LOL Pack") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "I543".`);
-            startingCell = "I543";
-        } else if (setName === "Cards Against Humanity: Reject Pack 2") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "I503".`);
-            startingCell = "I503";
-        } else if (setName === "Cards Against Humanity: PAX Prime 2015 Food Pack B (Coconut)") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "I439".`);
-            startingCell = "I439";
-        } else if (setName === "Cards Against Humanity: PAX East 2014") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "I389".`);
-            startingCell = "I389";
-        } else if (setName === "Cards Against Humanity: PAX East 2013 Promo Pack A") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "I369".`);
-            startingCell = "I369";
-        } else if (setName === "Cards Against Humanity: Hawaii 2 Safe Cards") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "I360".`);
-            startingCell = "I360";
-        } else if (setName === "Cards Against Humanity: 2013 Holiday Pack") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "I324".`);
-            startingCell = "I324";
-        } else if (setName === "Cards Against Humanity: Human Pack") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "I209".`);
-            startingCell = "I209";
-        } else if (setName === "Cards Against Humanity: 2000s Nostalgia Pack") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "I170".`);
-            startingCell = "I170";
-        } else if (setName === "Cards Against Humanity: Saves America Pack (CAH Store version)") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "I129".`);
-            startingCell = "I129";
-        } else if (setName === "Cards Against Humanity: Weed Pack") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "I93".`);
-            startingCell = "I93";
-        } else if (setName === "Cards Against Humanity: World Wide Web Pack") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "I47".`);
-            startingCell = "I47";
-        } else if (setName === "Cards Against Humanity: 90s Nostalgia Pack") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "I4".`);
-            startingCell = "I4";
-        } else if (setName === "Cards Against Humanity: Midterm Pack 2018 (Cards Against Humanity Hacks the Election version)") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "A625".`);
-            startingCell = "A625";
-        } else if (setName === "Cards Against Humanity: Fascism Pack") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "A543".`);
-            startingCell = "A543";
-        } else if (setName === "Cards Against Humanity: Reject Pack") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "A503".`);
-            startingCell = "A503";
-        } else if (setName === "Cards Against Humanity: PAX Prime 2015 Food Pack A (Mango)") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "A439".`);
-            startingCell = "A439";
-        } else if (setName === "Cards Against Humanity: PAX Prime 2013") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "A389".`);
-            startingCell = "A389";
-        } else if (setName === 'Cards Against Humanity: PAX 2012 "Oops" Kit') {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "A369".`);
-            startingCell = "A369";
-        } else if (setName === "Cards Against Humanity: 2012 Holiday Pack") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "A324".`);
-            startingCell = "A324";
-        } else if (setName === "Cards Against Humanity: A.I. Pack") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "A209".`);
-            startingCell = "A209";
-        } else if (setName === "Cards Against Humanity: Ass Pack") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "A170".`);
-            startingCell = "A170";
-        } else if (setName === "Cards Against Humanity: College Pack") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "A129".`);
-            startingCell = "A129";
-        } else if (setName === "Cards Against Humanity: Period Pack") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "A93".`);
-            startingCell = "A93";
-        } else if (setName === "Cards Against Humanity: Card Lab") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "AC1".`);
-            startingCell = "AC1";
-        } else if (setName === "Cards Against Humanity: Family Edition (Free Print & Play Public Beta)") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "L2150".`);
-            startingCell = "L2150";
-        } else if (setName === "Cards Against Humanity: Everything Box Expansion") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "L1422".`);
-            startingCell = "L1422";
-        } else if (setName === "Cards Against Humanity: Absurd Box Expansion") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "L1106".`);
-            startingCell = "L1106";
-        } else if (setName === "Cards Against Humanity: Green Box Expansion") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "L780".`);
-            startingCell = "L780";
-        } else if (setName === "Cards Against Humanity: Blue Box Expansion") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "L403".`);
-            startingCell = "L403";
-        } else if (setName === "Cards Against Humanity: Sixth Expansion") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "A668".`);
-            startingCell = "A668";
-        } else if (setName === "Cards Against Humanity: Fifth Expansion") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "A557".`);
-            startingCell = "A557";
-        } else if (setName === "Cards Against Humanity: Fourth Expansion") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "A446".`);
-            startingCell = "A446";
-        } else if (setName === "Cards Against Humanity: Third Expansion") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "A269".`);
-            startingCell = "A269";
-        } else if (setName === "Cards Against Humanity: UK Conversion Kit") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "A1776".`);
-            startingCell = "A1776";
-        } else if (setName === "Cards Against Humanity: Canadian Conversion Kit") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "A1739".`);
-            startingCell = "A1739";
-        } else if (setName === "Chaos Aghast Vulgarity Volume 2; Another Sick Expansion") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "Q307".`);
-            startingCell = "Q307";
-        } else if (setName === "Wilted Green") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "V408".`);
-            startingCell = "V408";
-        } else if (setName === "Cons Against Our Sanity: Volume One") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "V1".`);
-            startingCell = "V1";
-        } else if (setName === "Voter's Choice: The Fourth Expansion") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "V3929".`);
-            startingCell = "V3929";
-        } else if (setName === "Crabs Adjust Humidity: Volume 4 (also in Omniclaw)") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "V2336".`);
-            startingCell = "V2336";
-        } else if (setName === "Carps & Angsty Manatee - Texas Edition") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "P1052".`);
-            startingCell = "P1052";
-        } else if (setName === "Carps & Angsty Manatee - Volume 2") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "H1052".`);
-            startingCell = "H1052";
-        } else if (setName === "Voter's Choice: The First Expansion") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "A3929".`);
-            startingCell = "A3929";
-        } else if (setName === "KinderPerfect (Kickstarter Set)") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "A3261".`);
-            startingCell = "A3261";
-        } else if (setName === "JadedAid") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "A3060".`);
-            startingCell = "A3060";
-        } else if (setName === "Cards Against Humanity: Vote For Hillary Pack") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "A569".`);
-            startingCell = "A569";
-        } else if (setName === "Cards Against Humanity: Jack White Show Pack") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "A463".`);
-            startingCell = "A463";
-        } else if (setName === "Cards Against Humanity: Procedurally-Generated Cards") {
-            console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "V31".`);
-            startingCell = "V31";
-        } else if (setName === "REPLACEME") {
+        if (setName === "SETNAMEGOESHERE") {
             console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "REPLACEME".`);
-            startingCell = "REPLACEME";
-        } else if (setName === "REPLACEME") {
+            startingCell = "REPLACEME"; // Corrected starting cell
+        } else if (setName === "SETNAMEGOESHERE") {
             console.log(`Overriding Starting Cell for "${setName}" from "${startingCell}" to "REPLACEME".`);
             startingCell = "REPLACEME";
         }
         // --- END MANUAL OVERRIDES ---
 
         // --- MANUAL OVERRIDES FOR CARD COUNTS ---
-        if (setName === "Cads About Matrimony Poly Pack") {
+        if (setName === "SETNAMEGOESHERE") {
             console.log(`Overriding Response Cards Count for "${setName}" from ${responseCardsCount} to 319.`);
             responseCardsCount = 319;
-        } else if (setName === "Carps & Angsty Manatee - Volume 1") {
-            console.log(`Overriding Prompt Cards Count for "${setName}" from ${promptCardsCount} to 20.`);
-            promptCardsCount = 20;
-        } else if (setName === "Cards Against Humanity: PAX Prime 2014 Custom Printed Cards") {
-            console.log(`Overriding Response & Prompt Cards Count for "${setName}" from ${responseCardsCount} to 105 & ${promptCardsCount} to 1.`);
-            responseCardsCount = 105;
-            promptCardsCount = 1;
-        } else if (setName === "Cards Against Humanity: PAX Prime 2014 - Panel Cards") {
-            console.log(`Overriding Response Cards Count for "${setName}" from ${responseCardsCount} to 5.`);
-            responseCardsCount = 5;
-        } else if (setName === "Chaos Aghast Vulgarity Volume 2; Another Sick Expansion") {
-            console.log(`Overriding Response Cards Count for "${setName}" from ${responseCardsCount} to 179.`);
-            responseCardsCount = 179;
-        } else if (setName === "Cards Against Humanity: Reject Pack 3") {
-            console.log(`Overriding Response & Prompt Cards Count for "${setName}" from ${responseCardsCount} to 23 & ${promptCardsCount} to 2.`);
-            responseCardsCount = 23;
-            promptCardsCount = 2;
-        } else if (setName === "Cards Against Humanity: Card Lab") {
-            console.log(`Overriding Response Cards Count for "${setName}" from ${responseCardsCount} to 737.`);
-            responseCardsCount = 737;
-        } else if (setName === "Cards Against Humanity: Everything Box Expansion") {
-            console.log(`Overriding Prompt Cards Count for "${setName}" from ${promptCardsCount} to 50.`);
-            promptCardsCount = 50;
-        } else if (setName === "Voter's Choice: The Fourth Expansion") {
-            console.log(`Overriding Response Cards Count for "${setName}" from ${responseCardsCount} to 22.`);
-            responseCardsCount = 22;
-        } else if (setName === "Carps & Angsty Manatee - Texas Edition") {
-            console.log(`Overriding Response Cards Count for "${setName}" from ${responseCardsCount} to 124.`);
-            responseCardsCount = 124;
-        } else if (setName === "Carps & Angsty Manatee - Volume 2") {
-            console.log(`Overriding Prompt Cards Count for "${setName}" from ${promptCardsCount} to 22.`);
-            promptCardsCount = 22;
-        } else if (setName === "Voter's Choice: The First Expansion") {
-            console.log(`Overriding Response Cards Count for "${setName}" from ${responseCardsCount} to 20.`);
-            responseCardsCount = 20;
-        } else if (setName === "KinderPerfect (Kickstarter Set)") {
-            console.log(`Overriding Response Cards Count for "${setName}" from ${responseCardsCount} to 172.`);
-            responseCardsCount = 172;
-        } else if (setName === "JadedAid") {
+        } else if (setName === "SETNAMEGOESHERE") {
             console.log(`Overriding Response Cards Count for "${setName}" from ${responseCardsCount} to 159.`);
             responseCardsCount = 159;
         }
@@ -799,6 +469,7 @@ async function saveCardsToJSON(auth) {
                     sheetName: sheetName,
                     startRow: startRowIndex,
                     startCol: startColIndex,
+                    mechanicCardsCount: mechanicCardsCount,
                     promptCardsCount: promptCardsCount,
                     responseCardsCount: responseCardsCount,
                     endRow: -1, // Will be calculated later
@@ -920,9 +591,10 @@ async function saveCardsToJSON(auth) {
     for (const setInfo of setsToProcess) {
         const actual = actualCardCounts[setInfo.packId] || { prompt: 0, response: 0, mechanic: 0 };
 
+        const expectedMechanicCount = setInfo.mechanicCardsCount;
         const expectedPromptCount = setInfo.promptCardsCount;
         const expectedResponseCount = setInfo.responseCardsCount;
-        const expectedTotalCards = expectedPromptCount + expectedResponseCount;
+        const expectedTotalCards = expectedMechanicCount + expectedPromptCount + expectedResponseCount;
 
         const actualPromptCount = actual.prompt;
         const actualResponseCount = actual.response;
@@ -931,26 +603,30 @@ async function saveCardsToJSON(auth) {
         const actualTotalCardsExcludingMechanics = actualPromptCount + actualResponseCount;
         const actualTotalCardsIncludingMechanics = actualPromptCount + actualResponseCount + actualMechanicCount;
 
-        // A discrepancy is flagged if:
-        // (Individual prompt counts don't match OR individual response counts don't match)
-        // AND
-        // (Expected total doesn't match actual total excluding mechanics)
-        // AND
-        // (Expected total doesn't match actual total including mechanics)
-        const individualCountsMismatch = (expectedPromptCount !== actualPromptCount || expectedResponseCount !== actualResponseCount);
-        const totalExcludingMechanicsMismatch = (expectedTotalCards !== actualTotalCardsExcludingMechanics);
-        const totalIncludingMechanicsMismatch = (expectedTotalCards !== actualTotalCardsIncludingMechanics);
+        // A discrepancy is flagged if any of the counts (Prompt, Response, or Mechanic) mismatch the expected values from the Index.
+        const promptMismatch = expectedPromptCount !== actualPromptCount;
+        const responseMismatch = expectedResponseCount !== actualResponseCount;
+        const mechanicMismatch = expectedMechanicCount !== actualMechanicCount;
+        const totalMismatch = expectedTotalCards !== actualTotalCardsIncludingMechanics;
 
-        // Flag a discrepancy only if both individual counts and both total counts (with and without mechanics) don't match
-        if (individualCountsMismatch && totalExcludingMechanicsMismatch && totalIncludingMechanicsMismatch) {
+        if (promptMismatch || responseMismatch || mechanicMismatch || totalMismatch) {
             discrepanciesFound = true;
-            console.warn(
-                `DISCREPANCY for "${setInfo.packName}" (Sheet: "${setInfo.sheetName}", Start: ${setInfo.startRow + 1},${setInfo.startCol + 1}, End: ${setInfo.endRow + 1}):\n` +
-                `  Expected Prompt (from Index): ${expectedPromptCount}, Actual Prompt (excl. Mechanics): ${actualPromptCount}\n` +
-                `  Expected Response: ${expectedResponseCount}, Actual Response: ${actualResponseCount}\n` +
-                `  Actual Mechanic Cards (stored separately): ${actualMechanicCount}\n` +
-                `  Expected Total: ${expectedTotalCards}, Actual Total (Prompt+Response): ${actualTotalCardsExcludingMechanics}, Actual Total (Prompt+Response+Mechanic): ${actualTotalCardsIncludingMechanics}`
-            );
+            let warningMsg = `DISCREPANCY for "${setInfo.packName}" (Sheet: "${setInfo.sheetName}", Start: ${setInfo.startRow + 1},${setInfo.startCol + 1}, End: ${setInfo.endRow + 1}):\n`;
+            
+            warningMsg += `  Mechanic: Expected ${expectedMechanicCount}, Found ${actualMechanicCount}${mechanicMismatch ? ' <---' : ''}\n`;
+            warningMsg += `  Prompt:   Expected ${expectedPromptCount}, Found ${actualPromptCount}${promptMismatch ? ' <---' : ''}\n`;
+            warningMsg += `  Response: Expected ${expectedResponseCount}, Found ${actualResponseCount}${responseMismatch ? ' <---' : ''}\n`;
+            
+            if (totalMismatch) {
+                warningMsg += `  TOTAL:    Expected ${expectedTotalCards}, Found ${actualTotalCardsIncludingMechanics} (Prompt+Response+Mechanic) <---`;
+            }
+
+            // Specific hint for index errors
+            if (promptMismatch && mechanicMismatch && (actualPromptCount + actualMechanicCount === expectedPromptCount)) {
+                warningMsg += `\n  HINT: The Index "Prompt" count seems to include Mechanic cards. Update Index Prompt to ${actualPromptCount} and Mechanic to ${actualMechanicCount}.`;
+            }
+
+            console.warn(warningMsg);
         }
     }
     if (!discrepanciesFound) {
