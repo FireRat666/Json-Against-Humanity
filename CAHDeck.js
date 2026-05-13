@@ -53,12 +53,13 @@ class CAHDeck {
   listPacks() {
     let packs = [];
     let id = 0;
-    for (let { name, official, description, icon, white, black } of this.deck) {
+    for (let { name, official, description, icon, white, black, sheetName } of this.deck) {
       let pack = {
         id,
         name,
         official,
         description,
+        sheetName,
         counts: {
           white: white.length,
           black: black.length,
