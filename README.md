@@ -11,14 +11,14 @@ Finally, [Cards Against Humanity](https://cardsagainsthumanity.com/) as plain te
 
 ### How many cards are there?
 
-There are 31,700 cards available from 205 different packs and boxes.
+There are 69,947 cards available from 393 different packs and boxes.
 
-- That's all 5,702 official cards from 71 different products
-- Plus 25,998 even worse cards from fans around the world
+- That's all 9,316 official cards from 95 different products
+- Plus 60,631 even worse cards from fans around the world
 
 ### Wha— where the heck did you find all those cards??
 
-The primary source is [this Google Sheet](https://docs.google.com/spreadsheet/ccc?key=0Ajv9fdKngBJ_dHFvZjBzZDBjTE16T3JwNC0tRlp6Wnc&usp=sharing#gid=55) I found through [Board Game Geek](https://boardgamegeek.com/). Previous sources included [Hangouts Against Humanity](https://github.com/samurailink3/hangouts-against-humanity), [Pretend You're Xyzzy](http://pyx-3.pretendyoure.xyz/zy/viewcards.jsp), and contributions from viewers like you.
+The primary source is [this Google Sheet](https://docs.google.com/spreadsheet/ccc?key=0Ajv9fdKngBJ_dHFvZjBzZDBjTE16T3JwNC0tRlp6Wnc&usp=sharing#gid=55) [Chris Hallberg](https://crhallberg.com) found through [Board Game Geek](https://boardgamegeek.com/), [Which I copied and updated.](https://docs.google.com/spreadsheet/ccc?key=1Pp04v9plwiJwg8u-DrCHd4Fsf9ro3NhxOvISwc0bC4Y&usp=sharing#gid=55) Previous sources included [Hangouts Against Humanity](https://github.com/samurailink3/hangouts-against-humanity), [Pretend You're Xyzzy](http://pyx-3.pretendyoure.xyz/zy/viewcards.jsp), and contributions from viewers like you.
 
 ### What font is CAH?
 
@@ -26,15 +26,15 @@ Cards Against Humanity® cards are printed in [Helvetica® Neue](https://www.myf
 
 ### Who are you?
 
-[Chris Hallberg](https://crhallberg.com).
+[FireRat](https://firer.at/).
 
 ### I'm just getting started and I have a lot of questions
 
-You can reach me by [opening an Issue on GitHub](https://github.com/crhallberg/json-against-humanity/issues) or by email at chris.hallberg@hey.com. I'd love to hear from you!
+You can reach me by [opening an Issue on GitHub](https://github.com/FireRat666/json-against-humanity/issues) or by email at chris.hallberg@hey.com. I'd love to hear from you!
 
 ### I have the best feature idea! Can you add this?
 
-Sure! [Open a pull request](https://github.com/crhallberg/json-against-humanity/blob/latest/CONTRIBUTING.md).
+Sure! [Open a pull request](https://github.com/FireRat666/json-against-humanity/blob/latest/CONTRIBUTING.md).
 
 ### I want to give you money.
 
@@ -83,7 +83,7 @@ Are **you** telling **me** that _these cards_ are styled with Markdown and _?
 
 ### compact.json
 
-I wrote a small library to take advantage of this concise format: [CAHDeck.js](https://github.com/crhallberg/json-against-humanity/blob/latest/web/CAHDeck.js).
+[Chris Hallberg](https://crhallberg.com) wrote a small library to take advantage of this concise format: [CAHDeck.js](https://github.com/FireRat666/json-against-humanity/blob/latest/web/CAHDeck.js).
 
 ```json
 {
@@ -106,9 +106,9 @@ I wrote a small library to take advantage of this concise format: [CAHDeck.js](h
 
 ## Examples
 
-**[Canvas Deck Sampler](./examples/canvas).** Demonstration of ingesting the [cah-all-compact.json](https://github.com/crhallberg/json-against-humanity/blob/latest/cah-all-compact.json) file with the [basic Javascript library](https://github.com/crhallberg/json-against-humanity/blob/latest/web/CAHDeck.js) and displaying cards on a canvas element.
+**[Canvas Deck Sampler](./examples/canvas).** Demonstration of ingesting the [cah-all-compact.json](https://github.com/FireRat666/json-against-humanity/blob/latest/cah-all-compact.json) file with the [basic Javascript library](https://github.com/FireRat666/json-against-humanity/blob/latest/web/CAHDeck.js) and displaying cards on a canvas element.
 
-**[This Very Webpage](https://github.com/crhallberg/json-against-humanity/tree/latest/web).** [Ingesting from compact.json](https://github.com/crhallberg/json-against-humanity/blob/latest/web/site.js#L249-L253), listing decks, [combining selected decks](https://github.com/crhallberg/json-against-humanity/blob/latest/web/site.js#L178-L182), and [exporting files](https://github.com/crhallberg/json-against-humanity/blob/latest/web/site.js#L163-L174).
+**[This Very Webpage](https://github.com/FireRat666/json-against-humanity/tree/latest/web).** [Ingesting from compact.json](https://github.com/FireRat666/json-against-humanity/blob/latest/web/site.js#L249-L253), listing decks, [combining selected decks](https://github.com/FireRat666/json-against-humanity/blob/latest/web/site.js#L178-L182), and [exporting files](https://github.com/FireRat666/json-against-humanity/blob/latest/web/site.js#L163-L174).
 
 ## Fine Print
 
