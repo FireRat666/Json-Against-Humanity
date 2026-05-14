@@ -15,169 +15,130 @@
     <link rel="icon" href="data:;">
   </head>
   <body>
-    <div class="container wrapper">
-      <div class="flex-lg">
-        <div class="sidebar">
-          <nav id="bulk-controls" aria-label="Bulk Deck Controls">
-            <ul class="deck-list">
-              <li class="deck">
-                <button id="select-all" class="deck-btn">
-                  <i class="far fa-fw"></i> Select All
-                </button>
-                <button id="select-official"  class="deck-btn is-checked">
-                  <i class="far fa-fw"></i> Select Official
-                </button>
-              </li>
-            </ul>
-            <button class="mobile-toggle hidden-lg" aria-hidden="true">
-              Show All Decks
-            </button>
-          </nav>
-          <nav class="visually-hidden-sm" id="deck-list" aria-label="Individual Deck Selections"></nav>
+    <div class="container">
+      <header class="hero">
+        <h1>JSON Against Humanity</h1>
+        <p>Finally, Cards Against Humanity&reg; as plain text and JSON. Open source, curated, and ready for your next project.</p>
+        <div class="flex-center gap-1">
+          <a href="https://github.com/FireRat666/json-against-humanity" class="checkout-btn" style="text-decoration: none;">
+            <i class="fab fa-github"></i> View on GitHub
+          </a>
         </div>
-        <main class="readme">
-          <h1>JSON Against Humanity</h1>
+      </header>
 
-          <p>
-            Finally, Cards Against Humanity&reg; as plain text and JSON.
-            <a href="https://github.com/FireRat666/json-against-humanity">Enjoy fresh on GitHub</a>.
-          </p>
+      <div class="flex-lg">
+        <aside class="sidebar">
+          <section class="glass-panel">
+            <h3>Bulk Controls</h3>
+            <nav id="bulk-controls" aria-label="Bulk Deck Controls">
+              <ul class="deck-list">
+                <li>
+                  <button id="select-all" class="deck-btn">
+                    <i class="fas fa-check-double"></i> Select All
+                  </button>
+                </li>
+                <li>
+                  <button id="select-official" class="deck-btn">
+                    <i class="fas fa-star"></i> Select Official
+                  </button>
+                </li>
+              </ul>
+            </nav>
+            
+            <h3 style="margin-top: 1.5rem;">Select Decks</h3>
+            <div class="search-wrapper">
+              <i class="fas fa-search search-icon"></i>
+              <input type="text" id="deck-search" class="search-input" placeholder="Search packs...">
+            </div>
+            
+            <div id="deck-list-container">
+              <nav id="deck-list" aria-label="Individual Deck Selections"></nav>
+            </div>
+          </section>
+        </aside>
 
-          <h2>FAQ</h2>
+        <main class="readme glass-panel">
+          <section id="faq">
+            <h2>Frequently Asked Questions</h2>
+            <dl>
+              <dt>How many cards are there?</dt>
+              <dd id="card-counts"><i>Let me think about it for a second...</i></dd>
 
-          <dl>
-            <dt>How many cards are there?</dt>
-            <dd id="card-counts"><i>Let me think about it for a second...</i></dd>
+              <dt>Where does the data come from?</dt>
+              <dd>The primary source is the <a href="https://docs.google.com/spreadsheet/ccc?key=1Pp04v9plwiJwg8u-DrCHd4Fsf9ro3NhxOvISwc0bC4Y">Card Listing Spreadsheet</a>. Previous sources included <a href="https://github.com/samurailink3/hangouts-against-humanity">Hangouts Against Humanity</a> and <a href="http://pyx-3.pretendyoure.xyz/zy/viewcards.jsp">Pretend You're Xyzzy</a>.</dd>
 
-            <dt>Wha&mdash; where the heck did you find all those cards??</dt>
-            <dd>The primary source is <a href="https://docs.google.com/spreadsheet/ccc?key=0Ajv9fdKngBJ_dHFvZjBzZDBjTE16T3JwNC0tRlp6Wnc&amp;usp=sharing#gid=55">this Google Sheet</a> <a href="https://crhallberg.com">Chris Hallberg</a> found through <a href="https://boardgamegeek.com/">Board Game Geek</a>, <a href="https://docs.google.com/spreadsheet/ccc?key=1Pp04v9plwiJwg8u-DrCHd4Fsf9ro3NhxOvISwc0bC4Y&amp;usp=sharing#gid=55">Which I copied and updated.</a> Previous sources included <a href="https://github.com/samurailink3/hangouts-against-humanity">Hangouts Against Humanity</a>, <a href="http://pyx-3.pretendyoure.xyz/zy/viewcards.jsp">Pretend You're Xyzzy</a>, and contributions from viewers like you.</dd>
+              <dt>What font is CAH?</dt>
+              <dd>Cards Against Humanity&reg; cards are printed in <a href="https://www.myfonts.com/fonts/linotype/neue-helvetica/">Helvetica® Neue</a>. For this site, we use <a href="https://rsms.me/inter/">Inter</a>, which looks stunning and is highly readable.</dd>
 
-            <dt>What font is CAH?</dt>
-            <dd>Cards Against Humanity&reg; cards are printed in <a href="https://www.myfonts.com/fonts/linotype/neue-helvetica/">Helvetica® Neue</a>. It's not free. I use <a href="https://rsms.me/inter/">Inter&nbsp;Medium</a>. You're looking at it now.</dd>
+              <dt>Who maintains this?</dt>
+              <dd><a href="https://firer.at/">FireRat</a>. Feel free to <a href="https://github.com/FireRat666/json-against-humanity/issues">open an issue</a> if you have questions or feedback.</dd>
+            </dl>
+          </section>
 
-            <dt>Who are you?</dt>
-            <dd><a href="https://firer.at/">FireRat</a>.</dd>
-
-            <dt>I'm just getting started and I have a lot of questions</dt>
-            <dd>You can reach me by <a href="https://github.com/FireRat666/json-against-humanity/issues">opening an Issue on GitHub</a>. I'd love to hear from you!</dd>
-
-            <dt>I have the best feature idea! Can you add this?</dt>
-            <dd>Sure! <a href="https://github.com/FireRat666/json-against-humanity/blob/latest/CONTRIBUTING.md">Open a pull request</a>.</dd>
-
-            <dt>I want to give you money.</dt>
-            <dd>That's very nice of you but you legally can't. <a href="#fine-print">More on that later</a>. You should instead donate to <a href="https://secure.actblue.com/donate/bail_funds_george_floyd">local community bail funds</a>.</dd>
-          </dl>
-
-          <h2>File formats</h2>
-
-          <h3>Plaintext</h3>
-
-          <pre><code>White, answer cards.
+          <section id="formats">
+            <h2>File Formats</h2>
+            
+            <h3>Plaintext</h3>
+            <p>Simple and easy to read. One card per line.</p>
+            <pre><code>White, answer cards.
 Putting a new card on each line.
-Adding a divider after the white cards.
 ----------
-I love it when my _ are in plaintext.
-How are these cards styled?
-Are **you** telling **me** that _these cards_ are styled with Markdown and _?</code></pre>
+I love it when my _ are in plaintext.</code></pre>
 
-          <h3>full.json</h3>
-
-          <pre><code>[
+            <h3>full.json</h3>
+            <p>The most comprehensive format, including pack metadata and descriptions.</p>
+            <pre><code>[
   {
     "name": "The Base Set",
-    "description": "Sweet dirty vanilla",
     "official": true,
-    "white": [
-      {
-        "text": "Answer cards in plain text, formatted with **Markdown**",
-        "pack": 0
-      }
-    ],
-    "black": [
-      {
-        "text": "_Prompt_ cards\nwith _ for blanks!",
-        "pick": 1,
-        "pack": {pack index}
-      }
-    ]
-  },
-  { "white": [ { "pack": 1 }, ... ], ... },
-  { "white": [ { "pack": 2 }, ... ], ... }
+    "white": [{ "text": "Answer...", "pack": 0 }],
+    "black": [{ "text": "Prompt...", "pick": 1, "pack": 0 }]
+  }
 ]</code></pre>
 
-          <h3>compact.json</h3>
-
-          <p><a href="https://crhallberg.com">Chris Hallberg</a> wrote a small library to take advantage of this concise format: <a href="https://github.com/FireRat666/json-against-humanity/blob/latest/web/CAHDeck.js">CAHDeck.js</a>.</p>
-
-          <pre><code>{
-  "white": ["Answer cards in plain text, formatted with **Markdown**"],
-  "black": [
-    { "text": "_Prompt_ cards\nformatted with _.", "pick": 1 },
-    { "text": "I want a _ **and** _ sandwich! No corners!", "pick": 2 }
-  ],
+            <h3>compact.json</h3>
+            <p>Optimized for file size. Uses a shared pool of cards and references them by index.</p>
+            <pre><code>{
+  "white": ["Answer card..."],
+  "black": [{ "text": "Prompt...", "pick": 1 }],
   "packs": {
-    "abbreviation": {
-      "name": "The Base Set",
-      "description": "Sweet dirty vanilla",
-      "official": true,
-      "white": [0, 1, 2, "indexes for every white card in this pack"],
-      "black": [0, 1, 2, "indexes for every black card in this pack"]
-    }
+    "base": { "name": "Base Set", "white": [0], "black": [0] }
   }
 }</code></pre>
+          </section>
 
-          <h2>Examples</h2>
+          <section id="examples">
+            <h2>Integration</h2>
+            <p>Chris Hallberg wrote a small library to handle the compact format: <a href="https://github.com/FireRat666/json-against-humanity/blob/latest/web/CAHDeck.js">CAHDeck.js</a>.</p>
+            <p>This website itself is a demonstration of <a href="https://github.com/FireRat666/json-against-humanity/blob/latest/web/site.js#L263-L273">ingesting from compact.json</a>, <a href="https://github.com/FireRat666/json-against-humanity/blob/latest/web/site.js#L53-L89">listing decks</a>, <a href="https://github.com/FireRat666/json-against-humanity/blob/latest/web/site.js#L185-L240">combining selected decks</a>, and <a href="https://github.com/FireRat666/json-against-humanity/blob/latest/web/site.js#L178-L183">exporting files</a>.</p>
+            <p>Check out the <a href="./examples/canvas">Canvas Deck Sampler</a> for a live demonstration of ingesting the data.</p>
+          </section>
 
-          <dl>
-            <dt><a href="./examples/canvas">Canvas Deck Sampler</a></dt>
-            <dd>Demonstration of ingesting the <a href="https://github.com/FireRat666/json-against-humanity/blob/latest/cah-all-compact.json">cah-all-compact.json</a> file with the <a href="https://github.com/crhallberg/json-against-humanity/blob/latest/web/CAHDeck.js">basic Javascript library</a> and displaying cards on a canvas element.</dd>
-          </dl>
-
-          <dl>
-            <dt><a href="https://github.com/FireRat666/json-against-humanity/tree/latest/web">This Very Webpage</a></dt>
-            <dd><a href="https://github.com/FireRat666/json-against-humanity/blob/latest/web/site.js#L249-L253">Ingesting from compact.json</a>, listing decks, <a href="https://github.com/FireRat666/json-against-humanity/blob/latest/web/site.js#L178-L182">combining selected decks</a>, and <a href="https://github.com/FireRat666/json-against-humanity/blob/latest/web/site.js#L163-L174">exporting files</a>.</dd>
-          </dl>
-
-          <h2 id="fine-print">Fine Print</h2>
-
-          <dl>
-            <dt>Is this legal?</dt>
-            <dd>
-              <p>Yes. Cards Against Humanity&reg; is distributed under a <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons BY-NC-SA 4.0 license</a>. I think their website puts it best:</p>
-
-              <blockquote>
-                <p>
-                  We give you permission to use the Cards Against Humanity&reg; writing under a limited Creative Commons BY-NC-SA 4.0 license. That means you can use our writing if (and only if) you do all of these things:
-                </p>
-
-                <ol>
-                  <li>Make your work available totally for free.</li>
-                  <li>Share your work with others under the same Creative Commons license that we use.</li>
-                  <li>Give us credit in your project.</li>
-                </ol>
-              </blockquote>
-
-              <p>If you have questions or paperwork that says otherwise, contact me, we can work this out.</p>
-            </dd>
-          </dl>
+          <section id="fine-print">
+            <h2>Fine Print</h2>
+            <blockquote>
+              <p>Cards Against Humanity&reg; is distributed under a <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons BY-NC-SA 4.0 license</a>. This project is free, open-source, and provided as-is.</p>
+            </blockquote>
+          </section>
         </main>
       </div>
     </div>
 
     <nav class="checkout" aria-label="Download Toolbar">
-      <a class="hidden" id="download-link" href="">$</a>
-      <div class="container flex">
-        <p class="flex-1 sm:text-center">You are set to download <span id="checkout-count">a bunch of cards</span>.</p>
-        <span class="flex-break hidden-lg"></span>
-        <button class="checkout-btn" id="theme-toggle" title="Toggle Light/Dark Mode">
+      <div class="checkout-info">
+        <p><span id="checkout-count">a bunch of cards</span> selected</p>
+      </div>
+      <div class="checkout-btns">
+        <button class="checkout-btn" id="download-text">Plaintext</button>
+        <button class="checkout-btn" id="download-full">Full JSON</button>
+        <button class="checkout-btn" id="download-compact">Compact JSON</button>
+        <button id="theme-toggle" title="Toggle Mode">
           <i class="fas fa-moon"></i>
         </button>
-        <button class="checkout-btn" id="download-text">Download plaintext</button>
-        <button class="checkout-btn" id="download-full">Download full.json</button>
-        <button class="checkout-btn" id="download-compact">Download compact.json</button>
       </div>
     </nav>
 
+    <a class="hidden" id="download-link" href="">$</a>
     <script src="./site.js"></script>
   </body>
 </html>
