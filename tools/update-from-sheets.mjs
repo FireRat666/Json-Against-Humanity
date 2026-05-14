@@ -651,95 +651,79 @@ async function saveCardsToJSON(auth) {
         };
     }
 
-    let white = [];
-    let black = []; // Will contain only prompt cards
-    let mechanic = []; // Will contain mechanic cards
+    const finalBlackCards = [];
+    const finalWhiteCards = [];
+    const finalMechanicCards = [];
 
-    let blackIndexes = new Set(); // Use Set for efficient deduplication of lowercased text
-    let whiteIndexes = new Set(); // Use Set for efficient deduplication of lowercased text
-    let mechanicIndexes = new Set(); // Use Set for efficient deduplication of lowercased text
+    // Maps to track unique cards and their indices: { "text|pick": index }
+    const blackMap = new Map();
+    const whiteMap = new Map();
+    const mechanicMap = new Map();
 
-    let finalBlackCards = []; // To store unique black card objects
-    let finalWhiteCards = []; // To store unique white card strings
-    let finalMechanicCards = []; // To store unique mechanic card strings
+    let totalSavedCount = 0;
 
-    for (let card of allParsedCards) {
-        if (!card[1]) { // Skip if card text is empty
+    for (const card of allParsedCards) {
+        if (!card[1]) continue; // Skip empty text
+        
+        const text = String(card[1]).trim();
+        const textLower = text.toLowerCase();
+        const cardType = card[3];
+        const packId = card[0];
+
+        if (!packs[packId]) {
+            console.warn(`Pack ID ${packId} not found for card: ${text}`);
             continue;
         }
-        const textLower = String(card[1]).toLowerCase();
-        const cardType = card[3];
 
         if (cardType === 'prompt') {
-            // Check if this exact card (text + pick) already exists in our final list
-            const existingBlackCardIndex = finalBlackCards.findIndex(bc =>
-                String(bc.text).toLowerCase() === textLower && bc.pick === card[2]
-            );
-
+            const pick = card[2];
+            const key = `${textLower}|${pick}`;
             let cardIndex;
-            if (existingBlackCardIndex === -1) {
-                finalBlackCards.push({
-                    text: card[1],
-                    pick: card[2],
-                });
-                cardIndex = finalBlackCards.length - 1;
-            } else {
-                cardIndex = existingBlackCardIndex;
-            }
 
-            if (packs[card[0]]) {
-                packs[card[0]].black.push(cardIndex);
+            if (blackMap.has(key)) {
+                cardIndex = blackMap.get(key);
             } else {
-                console.warn(`Pack ID ${card[0]} not found for prompt card: ${card[1]}`);
+                finalBlackCards.push({ text, pick });
+                cardIndex = finalBlackCards.length - 1;
+                blackMap.set(key, cardIndex);
             }
+            packs[packId].black.push(cardIndex);
+            totalSavedCount++;
 
         } else if (cardType === 'response') {
             let cardIndex;
-            const existingWhiteCardIndex = finalWhiteCards.findIndex(wc =>
-                String(wc).toLowerCase() === textLower
-            );
-
-            if (existingWhiteCardIndex === -1) {
-                finalWhiteCards.push(String(card[1]).trim());
+            if (whiteMap.has(textLower)) {
+                cardIndex = whiteMap.get(textLower);
+            } else {
+                finalWhiteCards.push(text);
                 cardIndex = finalWhiteCards.length - 1;
-            } else {
-                cardIndex = existingWhiteCardIndex;
+                whiteMap.set(textLower, cardIndex);
             }
+            packs[packId].white.push(cardIndex);
+            totalSavedCount++;
 
-            if (packs[card[0]]) {
-                packs[card[0]].white.push(cardIndex);
-            } else {
-                console.warn(`Pack ID ${card[0]} not found for white card: ${card[1]}`);
-            }
         } else if (cardType === 'mechanic') {
             let cardIndex;
-            const existingMechanicCardIndex = finalMechanicCards.findIndex(mc =>
-                String(mc).toLowerCase() === textLower
-            );
-
-            if (existingMechanicCardIndex === -1) {
-                finalMechanicCards.push(String(card[1]).trim());
+            if (mechanicMap.has(textLower)) {
+                cardIndex = mechanicMap.get(textLower);
+            } else {
+                finalMechanicCards.push(text);
                 cardIndex = finalMechanicCards.length - 1;
-            } else {
-                cardIndex = existingMechanicCardIndex;
+                mechanicMap.set(textLower, cardIndex);
             }
-
-            if (packs[card[0]]) {
-                packs[card[0]].mechanic.push(cardIndex);
-            } else {
-                console.warn(`Pack ID ${card[0]} not found for mechanic card: ${card[1]}`);
-            }
+            packs[packId].mechanic.push(cardIndex);
+            totalSavedCount++;
         }
     }
 
-    console.log(
-        `saving... (${finalWhiteCards.length} white, ${finalBlackCards.length} black, ${finalMechanicCards.length} mechanic)`
-    );
+    console.log(`Total card instances processed across all packs: ${totalSavedCount}`);
+    console.log(`Unique cards saved: ${finalWhiteCards.length} white, ${finalBlackCards.length} black, ${finalMechanicCards.length} mechanic`);
+    console.log(`Total unique cards in database: ${finalWhiteCards.length + finalBlackCards.length + finalMechanicCards.length}`);
 
     try {
         await fs.writeFile(
             "./cah-all-compact.json",
-            JSON.stringify({ white: finalWhiteCards, black: finalBlackCards, mechanic: finalMechanicCards, packs: Object.values(packs) }, null, 2) // Added null, 2 for pretty printing
+            JSON.stringify({ white: finalWhiteCards, black: finalBlackCards, mechanic: finalMechanicCards, packs: Object.values(packs) }) // Removed null, 2 for pretty printing
         );
         console.log("cah-all-compact.json created successfully in the project root!");
     } catch (fileErr) {
