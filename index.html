@@ -2,11 +2,14 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
+		<meta name="color-scheme" content="dark">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>JSON Against Humanity</title>
 
     <link rel="stylesheet" href="./style.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="preconnect" href="https://rsms.me/">
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
     <script src="./CAHDeck.js"></script>
 
     <link rel="icon" href="data:;">
@@ -19,15 +22,15 @@
             <ul class="deck-list">
               <li class="deck">
                 <button id="select-all" class="deck-btn">
-                  <i class="deck-icon far fa-fw fa-square"></i> Select All
+                  <i class="far fa-fw"></i> Select All
                 </button>
                 <button id="select-official"  class="deck-btn is-checked">
-                  <i class="deck-icon far fa-fw fa-square"></i> Select Official
+                  <i class="far fa-fw"></i> Select Official
                 </button>
               </li>
             </ul>
             <button class="mobile-toggle hidden-lg" aria-hidden="true">
-              Show All Decks <span class="toggle-icon"></span>
+              Show All Decks
             </button>
           </nav>
           <nav class="visually-hidden-sm" id="deck-list" aria-label="Individual Deck Selections"></nav>
@@ -47,7 +50,7 @@
             <dd id="card-counts"><i>Let me think about it for a second...</i></dd>
 
             <dt>Wha&mdash; where the heck did you find all those cards??</dt>
-            <dd>The primary source is <a href="https://docs.google.com/spreadsheet/ccc?key=0Ajv9fdKngBJ_dHFvZjBzZDBjTE16T3JwNC0tRlp6Wnc&amp;usp=sharing#gid=55">this Google Sheet</a> <a href="https://crhallberg.com">Chris Hallberg</a> found through <a href="https://boardgamegeek.com/">Board Game Geek</a>. Previous sources included <a href="https://github.com/samurailink3/hangouts-against-humanity">Hangouts Against Humanity</a>, <a href="http://pyx-3.pretendyoure.xyz/zy/viewcards.jsp">Pretend You're Xyzzy</a>, and contributions from viewers like you.</dd>
+            <dd>The primary source is <a href="https://docs.google.com/spreadsheet/ccc?key=0Ajv9fdKngBJ_dHFvZjBzZDBjTE16T3JwNC0tRlp6Wnc&amp;usp=sharing#gid=55">this Google Sheet</a> <a href="https://crhallberg.com">Chris Hallberg</a> found through <a href="https://boardgamegeek.com/">Board Game Geek</a>, <a href="https://docs.google.com/spreadsheet/ccc?key=1Pp04v9plwiJwg8u-DrCHd4Fsf9ro3NhxOvISwc0bC4Y&amp;usp=sharing#gid=55">Which I copied and updated.</a> Previous sources included <a href="https://github.com/samurailink3/hangouts-against-humanity">Hangouts Against Humanity</a>, <a href="http://pyx-3.pretendyoure.xyz/zy/viewcards.jsp">Pretend You're Xyzzy</a>, and contributions from viewers like you.</dd>
 
             <dt>What font is CAH?</dt>
             <dd>Cards Against Humanity&reg; cards are printed in <a href="https://www.myfonts.com/fonts/linotype/neue-helvetica/">Helvetica® Neue</a>. It's not free. I use <a href="https://rsms.me/inter/">Inter&nbsp;Medium</a>. You're looking at it now.</dd>
@@ -166,6 +169,9 @@ Are **you** telling **me** that _these cards_ are styled with Markdown and _?</c
       <div class="container flex">
         <p class="flex-1 sm:text-center">You are set to download <span id="checkout-count">a bunch of cards</span>.</p>
         <span class="flex-break hidden-lg"></span>
+        <button class="checkout-btn" id="theme-toggle" title="Toggle Light/Dark Mode">
+          <i class="fas fa-moon"></i>
+        </button>
         <button class="checkout-btn" id="download-text">Download plaintext</button>
         <button class="checkout-btn" id="download-full">Download full.json</button>
         <button class="checkout-btn" id="download-compact">Download compact.json</button>

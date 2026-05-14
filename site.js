@@ -30,6 +30,29 @@ function tallySelected() {
   }
 }
 
+function syncBulkStates() {
+  const bulkBtns = document.querySelectorAll("#bulk-controls .deck-btn");
+  const deckList = document.getElementById("deck-list");
+  if (!deckList) return;
+
+  const allPacks = deckList.querySelectorAll(".deck-btn");
+  const officialPacks = deckList.querySelectorAll(".deck-btn.is-official");
+
+  bulkBtns.forEach(mainBtn => {
+    if (mainBtn.id === "select-all") {
+      const allChecked = allPacks.length > 0 && Array.from(allPacks).every(btn => btn.classList.contains("is-checked"));
+      mainBtn.classList.toggle("is-checked", allChecked);
+    } else if (mainBtn.id === "select-official") {
+      const allOfficialChecked = officialPacks.length > 0 && Array.from(officialPacks).every(btn => btn.classList.contains("is-checked"));
+      mainBtn.classList.toggle("is-checked", allOfficialChecked);
+    } else if (mainBtn.dataset.sheet) {
+      const sheetPacks = deckList.querySelectorAll(`.deck-btn[data-sheet="${mainBtn.dataset.sheet}"]`);
+      const allSheetChecked = sheetPacks.length > 0 && Array.from(sheetPacks).every(btn => btn.classList.contains("is-checked"));
+      mainBtn.classList.toggle("is-checked", allSheetChecked);
+    }
+  });
+}
+
 function bindPackBtns(contEl = document) {
   contEl.querySelectorAll(".deck-btn").forEach((btn) => {
     if (
@@ -49,8 +72,7 @@ function bindPackBtns(contEl = document) {
             selectedDecks.delete(btn.dataset.pack);
           }
         }
-        // Uncheck all bulk buttons
-        document.querySelectorAll("#bulk-controls .deck-btn").forEach(b => b.classList.remove("is-checked"));
+        syncBulkStates();
         tallySelected();
       },
       false
@@ -115,7 +137,7 @@ function deckCheckboxes(deck) {
     const li = document.createElement("li");
     li.className = "deck";
     li.innerHTML = `<button class="deck-btn sheet-btn" data-sheet="${sheet}">
-      <i class="deck-icon far fa-fw fa-square"></i> Select ${sheet}
+      <i class="far fa-fw"></i> Select ${sheet}
     </button>`;
     bulkList.appendChild(li);
   });
@@ -125,9 +147,7 @@ function deckCheckboxes(deck) {
     html += `<li class="deck">
       <button class="deck-btn${
         pack.official ? " is-official is-checked" : ""
-      }" data-pack="${pack.id}" data-sheet="${pack.sheetName || ""}"><i class="deck-icon fa fa-fw fa-${
-      pack.icon
-    }"></i> ${pack.name}</button>
+      }" data-pack="${pack.id}" data-sheet="${pack.sheetName || ""}">${pack.name}</button>
     </li>`;
     PACKLIST[pack.id] = pack;
   }
@@ -161,6 +181,7 @@ function deckCheckboxes(deck) {
             }
           });
         }
+        syncBulkStates();
         tallySelected();
       });
     });
@@ -178,6 +199,7 @@ function deckCheckboxes(deck) {
     false
   );
 
+  syncBulkStates();
   tallySelected();
 }
 
@@ -275,3 +297,18 @@ CAHDeck.fromCompact("https://raw.githubusercontent.com/FireRat666/json-against-h
   cardCounts(_deck);
   deckCheckboxes(_deck);
 });
+
+// Theme Toggle Logic
+const themeToggle = document.getElementById("theme-toggle");
+if (themeToggle) {
+  const icon = themeToggle.querySelector("i");
+  
+  themeToggle.addEventListener("click", () => {
+    const isCurrentlyLight = document.body.classList.toggle("light-theme");
+    if (isCurrentlyLight) {
+      icon.classList.replace("fa-moon", "fa-sun");
+    } else {
+      icon.classList.replace("fa-sun", "fa-moon");
+    }
+  });
+}
