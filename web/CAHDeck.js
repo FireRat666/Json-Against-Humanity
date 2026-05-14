@@ -6,16 +6,14 @@ class CAHDeck {
         Object.assign(
           {},
           { text: json.white[index] },
-          { pack: packs.length },
-          pack.icon ? { icon: pack.icon } : {}
+          { pack: packs.length }
         )
       );
       pack.black = pack.black.map((index) =>
         Object.assign(
           {},
           json.black[index],
-          { pack: packs.length },
-          pack.icon ? { icon: pack.icon } : {}
+          { pack: packs.length }
         )
       );
       packs.push(pack);
@@ -53,7 +51,7 @@ class CAHDeck {
   listPacks() {
     let packs = [];
     let id = 0;
-    for (let { name, official, description, icon, white, black, sheetName } of this.deck) {
+    for (let { name, official, description, white, black, sheetName } of this.deck) {
       let pack = {
         id,
         name,
@@ -66,9 +64,6 @@ class CAHDeck {
           total: white.length + black.length,
         },
       };
-      if (icon) {
-        pack.icon = icon;
-      }
       packs.push(pack);
       id += 1;
     }
