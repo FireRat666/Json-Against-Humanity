@@ -318,7 +318,7 @@ function setupDownloads() {
       pack.black.forEach(c => c.pack = id);
       return pack;
     });
-    download("cah-cards-full.json", JSON.stringify(json, null, 2));
+    download("cah-cards-full.json", JSON.stringify(json)); // Removed null, 2 For Pretty Printing
   });
 
   // Download Compact JSON
