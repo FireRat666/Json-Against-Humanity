@@ -24,6 +24,14 @@ class CAHDeck {
   async _loadDeck() {
     if (typeof this.compactSrc != "undefined") {
       let json = await fetch(this.compactSrc).then((data) => data.json());
+      // Snapshot pool sizes and pack index arrays BEFORE _hydrateCompact mutates json.packs.
+      // _hydrateCompact replaces each pack's white/black index arrays with hydrated card objects,
+      // so we must copy the raw integer indices now for correct deduplication later.
+      this.rawPoolSize = { white: json.white.length, black: json.black.length };
+      this.rawPackIndices = json.packs.map(p => ({
+        white: Array.from(p.white || []),
+        black: Array.from(p.black || []),
+      }));
       this.deck = this._hydrateCompact(json);
     } else if (typeof this.fullSrc != "undefined") {
       this.deck = await fetch(this.fullSrc).then((data) => data.json());
@@ -68,6 +76,59 @@ class CAHDeck {
       id += 1;
     }
     return packs;
+  }
+
+  /**
+   * Returns the total number of unique cards in the entire database pool.
+   * These are the deduplicated counts across ALL packs.
+   */
+  getPoolCounts() {
+    if (this.rawPoolSize) {
+      return {
+        white: this.rawPoolSize.white,
+        black: this.rawPoolSize.black,
+        total: this.rawPoolSize.white + this.rawPoolSize.black,
+      };
+    }
+    // Fallback for full.json format (no shared pool)
+    const packs = this.deck;
+    return {
+      white: new Set(packs.flatMap(p => p.white.map(c => c.text))).size,
+      black: new Set(packs.flatMap(p => p.black.map(c => c.text))).size,
+      total: 0,
+    };
+  }
+
+  /**
+   * Returns unique card counts for a selection of pack indexes.
+   * Uses Sets of pool indices (integers) so shared cards are counted only once.
+   * @param {number[]} indexes Array of pack IDs (numeric)
+   */
+  getUniqueCountsForSelection(indexes) {
+    const whiteSet = new Set();
+    const blackSet = new Set();
+    if (this.rawPackIndices) {
+      // compact format: rawPackIndices[id] holds the original integer index arrays
+      for (const id of indexes) {
+        const pack = this.rawPackIndices[id];
+        if (!pack) continue;
+        pack.white.forEach(i => whiteSet.add(i));
+        pack.black.forEach(i => blackSet.add(i));
+      }
+    } else {
+      // full.json fallback: deduplicate by text
+      for (const id of indexes) {
+        const pack = this.deck[id];
+        if (!pack) continue;
+        pack.white.forEach(c => whiteSet.add(c.text));
+        pack.black.forEach(c => blackSet.add(c.text));
+      }
+    }
+    return {
+      white: whiteSet.size,
+      black: blackSet.size,
+      total: whiteSet.size + blackSet.size,
+    };
   }
 
   getPack(index) {
