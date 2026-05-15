@@ -469,6 +469,7 @@ async function saveCardsToJSON(auth) {
                     sheetName: sheetName,
                     startRow: startRowIndex,
                     startCol: startColIndex,
+                    startingCell: startingCell,
                     mechanicCardsCount: mechanicCardsCount,
                     promptCardsCount: promptCardsCount,
                     responseCardsCount: responseCardsCount,
@@ -563,6 +564,12 @@ async function saveCardsToJSON(auth) {
         // Cap the endRow for the last set on a sheet to the actual sheet's last row
         if (setInfo.endRow === 99999) {
             setInfo.endRow = sheetValues.length - 1;
+        }
+
+        // Check if the Starting Cell actually contains the word "Set"
+        const cellValue = String(sheetValues[setInfo.startRow]?.[setInfo.startCol] || '').trim();
+        if (!cellValue.toLowerCase().includes('set')) {
+            console.warn(`DISCREPANCY: Starting cell ${setInfo.startingCell} for "${setInfo.packName}" in sheet "${setInfo.sheetName}" does not contain "Set". Found: "${cellValue}"`);
         }
 
         const cardsFromSet = extractCardsFromSetBlock(sheetValues, setInfo);
