@@ -62,7 +62,15 @@ function renderDecks(packs) {
 
   let html = '';
   Object.keys(grouped).sort().forEach(sheet => {
-    html += `<div class="group-header">${sheet}</div><ul class="deck-list">`;
+    html += `
+      <div class="group-header">
+        <span>${sheet}</span>
+        <div class="group-header-actions">
+          <button class="group-header-btn" data-sheet="${sheet}">Select All</button>
+        </div>
+      </div>
+      <ul class="deck-list">`;
+    
     grouped[sheet].sort((a, b) => a.name.localeCompare(b.name)).forEach(pack => {
       const isChecked = selectedDecks.has(pack.id.toString()) || pack.official;
       if (isChecked) selectedDecks.add(pack.id.toString());
@@ -72,7 +80,7 @@ function renderDecks(packs) {
           <button class="deck-btn ${pack.official ? "is-official" : ""} ${isChecked ? "is-checked" : ""}" 
                   data-pack="${pack.id}" 
                   data-name="${pack.name.toLowerCase()}"
-                  data-sheet="${pack.sheetName || ""}">
+                  data-sheet="${pack.sheetName || "Other Decks"}">
             ${pack.name}
           </button>
         </li>
@@ -83,7 +91,51 @@ function renderDecks(packs) {
   });
 
   deckListEl.innerHTML = html;
+  renderSheetBulkControls(Object.keys(grouped).sort());
   bindPackBtns(deckListEl);
+  bindSheetBtns();
+  syncBulkStates();
+  tallySelected();
+}
+
+function renderSheetBulkControls(sheets) {
+  const container = document.getElementById("bulk-sheets");
+  if (!container) return;
+  
+  let html = '';
+  sheets.forEach(sheet => {
+    html += `<button class="sheet-btn" data-sheet="${sheet}" title="${sheet}">${sheet}</button>`;
+  });
+  container.innerHTML = html;
+}
+
+function bindSheetBtns() {
+  // Bind buttons in the Bulk Controls section
+  document.querySelectorAll(".sheet-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const sheet = btn.dataset.sheet;
+      const isChecked = btn.classList.toggle("is-checked");
+      bulkToggleSheet(sheet, isChecked);
+    });
+  });
+
+  // Bind buttons in the Group Headers
+  document.querySelectorAll(".group-header-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const sheet = btn.dataset.sheet;
+      const isChecked = btn.classList.toggle("is-checked");
+      bulkToggleSheet(sheet, isChecked);
+    });
+  });
+}
+
+function bulkToggleSheet(sheet, isChecked) {
+  const targets = document.querySelectorAll(`#deck-list .deck-btn[data-sheet="${sheet}"]`);
+  targets.forEach(t => {
+    t.classList.toggle("is-checked", isChecked);
+    if (isChecked) selectedDecks.add(t.dataset.pack);
+    else selectedDecks.delete(t.dataset.pack);
+  });
   syncBulkStates();
   tallySelected();
 }
@@ -114,6 +166,22 @@ function syncBulkStates() {
 
   document.getElementById("select-all").classList.toggle("is-checked", allChecked);
   document.getElementById("select-official").classList.toggle("is-checked", officialChecked);
+
+  // Sync sheet buttons (both in bulk grid and headers)
+  const sheets = new Set();
+  document.querySelectorAll("#deck-list .deck-btn").forEach(btn => sheets.add(btn.dataset.sheet));
+  
+  sheets.forEach(sheet => {
+    const sheetPacks = document.querySelectorAll(`#deck-list .deck-btn[data-sheet="${sheet}"]`);
+    const sheetChecked = sheetPacks.length > 0 && Array.from(sheetPacks).every(b => b.classList.contains("is-checked"));
+    
+    document.querySelectorAll(`.sheet-btn[data-sheet="${sheet}"], .group-header-btn[data-sheet="${sheet}"]`).forEach(btn => {
+      btn.classList.toggle("is-checked", sheetChecked);
+      if (btn.classList.contains("group-header-btn")) {
+        btn.textContent = sheetChecked ? "Deselect All" : "Select All";
+      }
+    });
+  });
 }
 
 function setupBulkControls() {
@@ -138,6 +206,56 @@ function setupBulkControls() {
       tallySelected();
     });
   });
+}
+
+function setupCollapsibles() {
+  const toggles = [
+    { btnId: "toggle-sheets", targetId: "bulk-sheets" },
+    { btnId: "toggle-decks", targetId: "deck-selection-content" }
+  ];
+
+  toggles.forEach(({ btnId, targetId }) => {
+    const btn = document.getElementById(btnId);
+    const target = document.getElementById(targetId);
+    if (!btn || !target) return;
+
+    btn.addEventListener("click", () => {
+      // Toggle a general collapsed class
+      const isCollapsed = target.classList.toggle("is-collapsed");
+      // If it was collapsed by mobile default, we should also remove that class to ensure it shows up
+      if (target.classList.contains("is-collapsed-mobile")) {
+        target.classList.remove("is-collapsed-mobile");
+      }
+      
+      updateToggleUI(btn, isCollapsed);
+    });
+  });
+
+  // Initial state for mobile
+  if (window.innerWidth <= 991) {
+    const deckTarget = document.getElementById("deck-selection-content");
+    const deckBtn = document.getElementById("toggle-decks");
+    if (deckTarget && deckBtn) {
+      deckTarget.classList.add("is-collapsed-mobile");
+      updateToggleUI(deckBtn, true);
+    }
+  }
+}
+
+function updateToggleUI(btn, isCollapsed) {
+  const label = btn.querySelector(".toggle-label");
+  const icon = btn.querySelector("i");
+  if (!label || !icon) return;
+  
+  if (isCollapsed) {
+    label.textContent = "Show";
+    icon.className = "fas fa-chevron-down";
+    btn.classList.remove("is-active");
+  } else {
+    label.textContent = "Hide";
+    icon.className = "fas fa-chevron-up";
+    btn.classList.add("is-active");
+  }
 }
 
 function setupSearch() {
@@ -268,6 +386,7 @@ CAHDeck.fromCompact(DATA_URL).then(_deck => {
   renderDecks(_deck.listPacks());
   setupBulkControls();
   setupSearch();
+  setupCollapsibles();
   setupDownloads();
   setupTheme();
 });
