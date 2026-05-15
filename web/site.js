@@ -19,15 +19,35 @@ let tallyEl;
 
 function tallySelected() {
   if (!tallyEl) tallyEl = document.getElementById("checkout-count");
-  let sum = 0;
+  let totalInstances = 0;
   for (let index of selectedDecks) {
-    if (PACKLIST[index]) sum += PACKLIST[index].counts.total;
+    if (PACKLIST[index]) totalInstances += PACKLIST[index].counts.total;
   }
-  
-  if (sum === 0) tallyEl.innerHTML = "f-ckin' nothin'";
-  else if (sum === 1) tallyEl.innerHTML = "1 card";
-  else if (sum === 69) tallyEl.innerHTML = "69 cards. Nice";
-  else tallyEl.innerHTML = `${comma(sum)} cards`;
+
+  if (totalInstances === 0) {
+    tallyEl.innerHTML = "f-ckin' nothin'";
+    return;
+  }
+
+  // Compute unique counts using pool indices (deduplicates cards shared between packs)
+  const ids = Array.from(selectedDecks).map(Number);
+  const unique = deck ? deck.getUniqueCountsForSelection(ids) : null;
+
+  if (unique) {
+    const uniqueStr = comma(unique.total);
+    const totalStr  = comma(totalInstances);
+    if (unique.total === totalInstances) {
+      // No duplicates across selected packs — just show the count cleanly
+      tallyEl.innerHTML = `<strong>${uniqueStr}</strong> unique cards`;
+    } else {
+      tallyEl.innerHTML =
+        `<strong>${uniqueStr}</strong> unique / <span class="tally-total">${totalStr} total</span> cards`;
+    }
+  } else {
+    if (totalInstances === 1)  tallyEl.innerHTML = "1 card";
+    else if (totalInstances === 69) tallyEl.innerHTML = "69 cards. Nice";
+    else tallyEl.innerHTML = `${comma(totalInstances)} cards`;
+  }
 }
 
 /**
@@ -35,17 +55,24 @@ function tallySelected() {
  */
 function cardCounts(_deck) {
   const packs = _deck.listPacks();
-  const totalCount = packs.reduce((sum, p) => sum + p.counts.total, 0);
+  const totalInstances = packs.reduce((sum, p) => sum + p.counts.total, 0);
   const official = packs.filter(p => p.official);
-  const officialCount = official.reduce((sum, p) => sum + p.counts.total, 0);
-  const fanCount = totalCount - officialCount;
+  const officialInstances = official.reduce((sum, p) => sum + p.counts.total, 0);
+  const fanInstances = totalInstances - officialInstances;
+
+  // Unique counts come from the shared pool (deduplicated across all packs)
+  const pool = _deck.getPoolCounts();
 
   const html = `
-    <p>There are <strong>${comma(totalCount)}</strong> cards available from <strong>${comma(packs.length)}</strong> packs.</p>
+    <p>There are <strong>${comma(totalInstances)}</strong> cards available
+       (<strong>${comma(pool.total)}</strong> unique) from <strong>${comma(packs.length)}</strong> packs.</p>
     <ul>
-      <li><strong>${comma(officialCount)}</strong> official cards from ${official.length} products.</li>
-      <li><strong>${comma(fanCount)}</strong> fan-made cards from around the world.</li>
+      <li><strong>${comma(officialInstances)}</strong> official cards from ${official.length} products.</li>
+      <li><strong>${comma(fanInstances)}</strong> fan-made cards from around the world.</li>
     </ul>
+    <p class="unique-note">The unique count removes duplicates that appear in multiple packs:
+       <strong>${comma(pool.white)}</strong> unique response cards
+       and <strong>${comma(pool.black)}</strong> unique prompt cards.</p>
   `;
   document.getElementById("card-counts").innerHTML = html;
 }
