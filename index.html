@@ -43,16 +43,36 @@
                   </button>
                 </li>
               </ul>
+              
+              <div class="section-header">
+                <div class="bulk-section-title" style="margin: 3;">By Sheet</div>
+                <button class="section-toggle" id="toggle-sheets" aria-label="Toggle Sheet Grid">
+                  <span class="toggle-label">Hide</span>
+                  <i class="fas fa-chevron-up"></i>
+                </button>
+              </div>
+              <div id="bulk-sheets" class="sheet-bulk-grid">
+                <!-- Populated via JS -->
+              </div>
             </nav>
             
-            <h3 style="margin-top: 1.5rem;">Select Decks</h3>
-            <div class="search-wrapper">
-              <i class="fas fa-search search-icon"></i>
-              <input type="text" id="deck-search" class="search-input" placeholder="Search packs...">
+            <div class="section-header" style="margin-top: 1.5rem;">
+              <h3 style="margin: 0;">Select Decks</h3>
+              <button class="section-toggle" id="toggle-decks" aria-label="Toggle Deck List">
+                <span class="toggle-label">Hide</span>
+                <i class="fas fa-chevron-up"></i>
+              </button>
             </div>
             
-            <div id="deck-list-container">
-              <nav id="deck-list" aria-label="Individual Deck Selections"></nav>
+            <div id="deck-selection-content">
+              <div class="search-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="deck-search" class="search-input" placeholder="Search packs...">
+              </div>
+              
+              <div id="deck-list-container">
+                <nav id="deck-list" aria-label="Individual Deck Selections"></nav>
+              </div>
             </div>
           </section>
         </aside>
@@ -110,7 +130,7 @@ I love it when my _ are in plaintext.</code></pre>
           <section id="examples">
             <h2>Integration</h2>
             <p>Chris Hallberg wrote a small library to handle the compact format: <a href="https://github.com/FireRat666/json-against-humanity/blob/latest/web/CAHDeck.js">CAHDeck.js</a>.</p>
-            <p>This website itself is a demonstration of <a href="https://github.com/FireRat666/json-against-humanity/blob/latest/web/site.js#L263-L273">ingesting from compact.json</a>, <a href="https://github.com/FireRat666/json-against-humanity/blob/latest/web/site.js#L53-L89">listing decks</a>, <a href="https://github.com/FireRat666/json-against-humanity/blob/latest/web/site.js#L185-L240">combining selected decks</a>, and <a href="https://github.com/FireRat666/json-against-humanity/blob/latest/web/site.js#L178-L183">exporting files</a>.</p>
+            <p>This website itself is a demonstration of <a href="https://github.com/FireRat666/json-against-humanity/blob/latest/web/site.js#L381-L392">ingesting from compact.json</a>, <a href="https://github.com/FireRat666/json-against-humanity/blob/latest/web/site.js#L53-L99">listing decks</a>, <a href="https://github.com/FireRat666/json-against-humanity/blob/latest/web/site.js#L303-L358">combining selected decks</a>, and <a href="https://github.com/FireRat666/json-against-humanity/blob/latest/web/site.js#L295-L301">exporting files</a>.</p>
             <p>Check out the <a href="./examples/canvas">Canvas Deck Sampler</a> for a live demonstration of ingesting the data.</p>
           </section>
 
