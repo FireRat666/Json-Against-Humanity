@@ -348,6 +348,128 @@ function extractCardsFromSetBlock(sheetValues, setInfo) {
 }
 
 
+/**
+ * Extracts version-specific sets from the CAH Main Deck sheet.
+ * Starting at column Z (index 25), row 5 (index 4) contains the country (INTL, US, UK, CA, AU),
+ * and row 6 (index 5) contains the version string (e.g. "v2.0").
+ * For every card row in the sheet, if the cell in that version-column equals the version string,
+ * the card is added to a new pack named "CAH Main Deck: {COUNTRY} {VERSION}".
+ *
+ * @param {Array<Array<string>>} sheetValues The raw data for the "CAH Main Deck" sheet.
+ * @returns {Array<Array<any>>} An array of parsed cards, each as [packId, cardText, pickCount, cardType].
+ */
+function extractMainDeckVersionSets(sheetValues) {
+    console.log("\n--- Extracting CAH Main Deck version sets (Z5 onwards) ---");
+    const newCards = [];
+
+    const COUNTRY_ROW = 4;   // Row index for country header (row 5 in sheet)
+    const VERSION_ROW = 5;   // Row index for version header (row 6 in sheet)
+    const FIRST_VERSION_COL = 25; // Column Z (0-indexed)
+
+    // The label column for this sheet is column A (index 0)
+    const LABEL_COL = 0;
+    const TEXT_COL  = 1;
+
+    if (!sheetValues || sheetValues.length <= VERSION_ROW) {
+        console.warn("CAH Main Deck sheet is too short to contain version headers.");
+        return newCards;
+    }
+
+    const countryRow  = sheetValues[COUNTRY_ROW] || [];
+    const versionRow  = sheetValues[VERSION_ROW]  || [];
+
+    // Discover all version columns
+    const versionColumns = []; // [{ col, country, version, packId }]
+    for (let col = FIRST_VERSION_COL; col < Math.max(countryRow.length, versionRow.length); col++) {
+        const country = String(countryRow[col] || '').trim();
+        const version = String(versionRow[col]  || '').trim();
+
+        if (!country && !version) {
+            // Stop scanning once we hit an empty header pair
+            // (sparse sheets might have gaps; continue to be safe, stop after 10 empty)
+            continue;
+        }
+        if (!version) continue; // Country without version — skip
+
+        const packName = `CAH Main Deck: ${country} ${version}`.trim();
+        console.log(`  Found version column ${col + 1} (col index ${col}): "${packName}"`);
+
+        if (!packMap[packName]) {
+            packMap[packName] = {
+                id: nanoid(),
+                official: true,
+                sheetName: "CAH Main Deck",
+            };
+        }
+
+        versionColumns.push({
+            col,
+            country,
+            version,
+            packId: packMap[packName].id,
+            packName,
+        });
+    }
+
+    console.log(`  Discovered ${versionColumns.length} version column(s).`);
+
+    if (versionColumns.length === 0) {
+        console.log("  No version columns found — skipping.");
+        return newCards;
+    }
+
+    // Determine the maximum row covered by all version columns so we scan the full range
+    const maxVersionCol = Math.max(...versionColumns.map(vc => vc.col));
+
+    // Scan every data row and check each version column
+    let cardRowsScanned = 0;
+    for (let r = VERSION_ROW + 1; r < sheetValues.length; r++) {
+        const cardRow = sheetValues[r];
+        if (!cardRow) continue;
+
+        const labelRaw = String(cardRow[LABEL_COL] || '').trim().toLowerCase();
+        const cardText = String(cardRow[TEXT_COL]  || '').trim();
+
+        if (!cardText) continue; // No card text — not a card row
+        if (labelRaw !== 'prompt' && labelRaw !== 'response') continue; // Not a card row
+
+        cardRowsScanned++;
+
+        for (const vc of versionColumns) {
+            // The version cell for this card row in this version column
+            const versionCell = String(cardRow[vc.col] || '').trim();
+
+            if (versionCell !== vc.version) continue; // Card not in this version set
+
+            if (labelRaw === 'prompt') {
+                let pickCount = 1;
+                const explicitPickMatch = cardText.match(/{(\d+)}/);
+                if (explicitPickMatch) {
+                    pickCount = parseInt(explicitPickMatch[1], 10);
+                } else if (cardRow[TEXT_COL + 1]) {
+                    const pickContent = String(cardRow[TEXT_COL + 1]).trim().toUpperCase();
+                    const pickMatch = pickContent.match(/PICK\s+(\d+)/);
+                    if (pickMatch) {
+                        pickCount = parseInt(pickMatch[1], 10);
+                    } else if (pickContent === "PICK") {
+                        const pickValue = parseInt(cardRow[TEXT_COL + 2], 10);
+                        if (!isNaN(pickValue) && pickValue > 0) pickCount = pickValue;
+                    }
+                } else if (cardText === "Make a haiku.") {
+                    pickCount = 3;
+                }
+                newCards.push([vc.packId, replaceExoticChars(cardText.replace(/_+/g, "_")), pickCount, 'prompt']);
+            } else { // response
+                newCards.push([vc.packId, replaceExoticChars(cardText), null, 'response']);
+            }
+        }
+    }
+
+    console.log(`  Scanned ${cardRowsScanned} card rows. Added ${newCards.length} version-set card instances.`);
+    console.log("--- End CAH Main Deck version sets ---\n");
+    return newCards;
+}
+
 const SPREADSHEET_ID = "1Pp04v9plwiJwg8u-DrCHd4Fsf9ro3NhxOvISwc0bC4Y"; // Your main spreadsheet ID
 
 async function saveCardsToJSON(auth) {
@@ -576,7 +698,17 @@ async function saveCardsToJSON(auth) {
         allParsedCards = allParsedCards.concat(cardsFromSet);
         // console.log(`Extracted ${cardsFromSet.length} cards for set "${setInfo.packName}" from sheet "${setInfo.sheetName}".`);
     }
-    console.log(`Total cards extracted: ${allParsedCards.length}`);
+    console.log(`Total cards extracted from standard sets: ${allParsedCards.length}`);
+
+    // Step 4b: Extract CAH Main Deck version sets (INTL, US, UK, CA, AU × version)
+    const mainDeckSheetValues = allSheetData["CAH Main Deck"];
+    if (mainDeckSheetValues && mainDeckSheetValues.length > 0) {
+        const versionSetCards = extractMainDeckVersionSets(mainDeckSheetValues);
+        allParsedCards = allParsedCards.concat(versionSetCards);
+        console.log(`Total cards after adding Main Deck version sets: ${allParsedCards.length}`);
+    } else {
+        console.warn("CAH Main Deck sheet data not available — skipping version set extraction.");
+    }
 
     // Step 5: Validate extracted card counts against Index data
     console.log("\n--- Validating Extracted Card Counts ---");
@@ -646,6 +778,7 @@ async function saveCardsToJSON(auth) {
     console.log("Separating and indexing cards...");
     let packs = {};
     // Re-populate packs based on packMap which was updated during parsing
+    // (packMap may have grown during extractMainDeckVersionSets, so we always iterate the full map)
     for (let name in packMap) {
         let pack = packMap[name];
         packs[pack.id] = {
