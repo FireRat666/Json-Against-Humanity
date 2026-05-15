@@ -1,4 +1,3 @@
-@import "../../vendor/inter.css";
 
 html {
   font-size: 16px;
@@ -11,7 +10,7 @@ body {
     "Segoe UI Symbol";
   font-weight: 500;
   line-height: 1.5;
-  background-color: #757575;
+  background-color: #454545;
 }
 @supports (font-variation-settings: normal) {
   body {
@@ -51,19 +50,19 @@ body {
   font: inherit;
   line-height: 1.15;
   text-align: left;
-  color: #000;
-  background-color: rgba(255, 255, 255, 0.8);
-  text-shadow: 0 1px 0 #fff;
+  color: #ffffff;
+  background-color: rgba(0, 0, 0, 0.8);
+  /* text-shadow: 0 1px 0 #acacac; */
   border-radius: 0.5rem;
   cursor: pointer;
   appearance: none;
 }
 .deck-btn:hover,
 .deck-btn:focus {
-  background-color: #e0e0e0;
+  background-color: #004708;
 }
 .deck-btn:active {
-  color: #fff;
+  color: #00a50b;
   background-color: #000;
 }
 
@@ -72,10 +71,10 @@ body {
     width: 20%;
     min-width: 300px;
     padding: 1rem 2rem;
-    background-color: rgba(255, 255, 255, 0.4);
+    background-color: rgba(142, 142, 142, 0.4);
   }
   .deck-btn {
-    background-color: #fff;
+    background-color: #000000;
   }
 }
 
