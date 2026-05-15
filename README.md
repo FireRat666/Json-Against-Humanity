@@ -11,10 +11,10 @@ Finally, [Cards Against Humanity](https://cardsagainsthumanity.com/) as plain te
 
 ### How many cards are there?
 
-There are 69,947 cards available from 393 different packs and boxes.
+There are 72,780 cards available from 404 packs and boxes.
 
-- That's all 9,316 official cards from 95 different products
-- Plus 60,631 even worse cards from fans around the world
+- That's all 12,047 official cards from 105 products
+- Plus 60,733 even worse cards from fans around the world
 
 ### Wha— where the heck did you find all those cards??
 
@@ -83,7 +83,7 @@ Optimized for file size. Uses a shared pool of cards and references them by inde
 
 Chris Hallberg wrote a small library to handle the compact format: [CAHDeck.js](https://github.com/FireRat666/json-against-humanity/blob/latest/web/CAHDeck.js).
 
-[This](https://jah.firer.at/) website itself is a demonstration of [Ingesting from compact.json](https://github.com/FireRat666/json-against-humanity/blob/latest/web/site.js#L263-L273), [listing decks](https://github.com/FireRat666/json-against-humanity/blob/latest/web/site.js#L53-L89), [combining selected decks](https://github.com/FireRat666/json-against-humanity/blob/latest/web/site.js#L185-L240), and [exporting files](https://github.com/FireRat666/json-against-humanity/blob/latest/web/site.js#L178-L183).
+[This](https://jah.firer.at/) website itself is a demonstration of [Ingesting from compact.json](https://github.com/FireRat666/json-against-humanity/blob/latest/web/site.js#L381-L392), [listing decks](https://github.com/FireRat666/json-against-humanity/blob/latest/web/site.js#L53-L89), [combining selected decks](https://github.com/FireRat666/json-against-humanity/blob/latest/web/site.js#L303-L358), and [exporting files](https://github.com/FireRat666/json-against-humanity/blob/latest/web/site.js#L295-L301).
 
 ## Fine Print
 
