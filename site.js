@@ -8,7 +8,8 @@
 class CAHDeck {
   _hydrateCompact(json) {
     let packs = [];
-    for (let pack of json.packs) {
+    const sourcePacks = Array.isArray(json.packs) ? json.packs : Object.values(json.packs);
+    for (let pack of sourcePacks) {
       pack.white = pack.white.map((index) =>
         Object.assign(
           {},
@@ -54,6 +55,21 @@ class CAHDeck {
     n.compactSrc = compactSrc;
     await n._loadDeck();
     return n;
+  }
+
+  static fromCompactJson(json) {
+    let n = new CAHDeck();
+    n._loadDeckFromJson(json);
+    return n;
+  }
+
+  _loadDeckFromJson(json) {
+    this.rawPoolSize = { white: json.white.length, black: json.black.length };
+    this.rawPackIndices = json.packs.map(p => ({
+      white: Array.from(p.white || []),
+      black: Array.from(p.black || []),
+    }));
+    this.deck = this._hydrateCompact(json);
   }
 
   static async fromFull(fullSrc) {
@@ -563,18 +579,120 @@ function setupTheme() {
 }
 
 /**
+ * DECK COMBINING & TOGGLE LOGIC
+ */
+const CAH_URL = "https://raw.githubusercontent.com/FireRat666/json-against-humanity/latest/cah-all-compact.json";
+const MD_URL = "https://raw.githubusercontent.com/FireRat666/json-against-humanity/latest/md-all-compact.json";
+
+let cahJsonData = null;
+let mdJsonData = null;
+
+function combineDecks(cahJson, mdJson) {
+  const combined = {
+    white: [...cahJson.white],
+    black: [...cahJson.black],
+    mechanic: [...(cahJson.mechanic || [])],
+    packs: []
+  };
+
+  const cahPacks = Array.isArray(cahJson.packs) ? cahJson.packs : Object.values(cahJson.packs);
+  cahPacks.forEach(p => {
+    combined.packs.push({
+      ...p,
+      white: [...p.white],
+      black: [...p.black],
+      mechanic: p.mechanic ? [...p.mechanic] : []
+    });
+  });
+
+  const whiteOffset = cahJson.white.length;
+  const blackOffset = cahJson.black.length;
+  const mechanicOffset = (cahJson.mechanic || []).length;
+
+  const mdPacks = Array.isArray(mdJson.packs) ? mdJson.packs : Object.values(mdJson.packs);
+  mdPacks.forEach(p => {
+    combined.packs.push({
+      ...p,
+      white: p.white.map(idx => idx + whiteOffset),
+      black: p.black.map(idx => idx + blackOffset),
+      mechanic: (p.mechanic || []).map(idx => idx + mechanicOffset)
+    });
+  });
+
+  combined.white.push(...mdJson.white);
+  combined.black.push(...mdJson.black);
+  if (mdJson.mechanic) {
+    combined.mechanic.push(...mdJson.mechanic);
+  }
+
+  return combined;
+}
+
+function setupSourceSelectors() {
+  const mdCheckbox = document.getElementById("source-manydecks");
+  const mdLabelText = document.getElementById("manydecks-label-text");
+  if (!mdCheckbox) return;
+
+  mdCheckbox.addEventListener("change", async () => {
+    mdCheckbox.disabled = true;
+    if (mdCheckbox.checked) {
+      mdLabelText.textContent = "Loading ManyDecks... (24MB)";
+      try {
+        if (!mdJsonData) {
+          const res = await fetch(MD_URL);
+          if (!res.ok) throw new Error("Network response was not ok");
+          mdJsonData = await res.json();
+        }
+        
+        const combinedJson = combineDecks(cahJsonData, mdJsonData);
+        deck = CAHDeck.fromCompactJson(combinedJson);
+      } catch (err) {
+        console.error("Failed to load md-all-compact.json", err);
+        alert("Failed to load ManyDecks. Please check your connection and try again.");
+        mdCheckbox.checked = false;
+        deck = CAHDeck.fromCompactJson(cahJsonData);
+      } finally {
+        mdLabelText.textContent = "ManyDecks (md-all-compact)";
+        mdCheckbox.disabled = false;
+      }
+    } else {
+      deck = CAHDeck.fromCompactJson(cahJsonData);
+      // Clean up selected decks
+      const mainPacksCount = cahJsonData.packs.length;
+      const newSelectedDecks = new Set();
+      selectedDecks.forEach(idStr => {
+        const id = parseInt(idStr, 10);
+        if (id < mainPacksCount) {
+          newSelectedDecks.add(idStr);
+        }
+      });
+      selectedDecks = newSelectedDecks;
+      mdCheckbox.disabled = false;
+    }
+
+    cardCounts(deck);
+    renderDecks(deck.listPacks());
+  });
+}
+
+/**
  * INITIALIZATION
  */
-const DATA_URL = "https://raw.githubusercontent.com/FireRat666/json-against-humanity/latest/cah-all-compact.json";
-
-CAHDeck.fromCompact(DATA_URL).then(_deck => {
-  deck = _deck;
-  cardCounts(_deck);
-  renderDecks(_deck.listPacks());
-  setupBulkControls();
-  setupSearch();
-  setupCollapsibles();
-  setupDownloads();
-  setupTheme();
-});
+fetch(CAH_URL)
+  .then(res => res.json())
+  .then(json => {
+    cahJsonData = json;
+    deck = CAHDeck.fromCompactJson(json);
+    cardCounts(deck);
+    renderDecks(deck.listPacks());
+    setupBulkControls();
+    setupSearch();
+    setupCollapsibles();
+    setupDownloads();
+    setupTheme();
+    setupSourceSelectors();
+  })
+  .catch(err => {
+    console.error("Failed to initialize cards deck:", err);
+  });
 

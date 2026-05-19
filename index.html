@@ -27,6 +27,18 @@
       <div class="flex-lg">
         <aside class="sidebar">
           <section class="glass-panel">
+            <h3>Deck Sources</h3>
+            <div class="source-selectors" style="margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 0.50rem;">
+              <label class="source-label" style="display: flex; align-items: center; gap: 0.75rem; font-size: 0.875rem; cursor: pointer; color: var(--text-secondary);">
+                <input type="checkbox" id="source-cah" checked disabled style="accent-color: var(--accent-color); width: 1.1rem; height: 1.1rem;">
+                <span>Main Deck (cah-all-compact)</span>
+              </label>
+              <label class="source-label" style="display: flex; align-items: center; gap: 0.75rem; font-size: 0.875rem; cursor: pointer; color: var(--text-secondary);">
+                <input type="checkbox" id="source-manydecks" style="accent-color: var(--accent-color); width: 1.1rem; height: 1.1rem;">
+                <span id="manydecks-label-text">ManyDecks (md-all-compact)</span>
+              </label>
+            </div>
+
             <h3>Bulk Controls</h3>
             <nav id="bulk-controls" aria-label="Bulk Deck Controls">
               <ul class="deck-list">

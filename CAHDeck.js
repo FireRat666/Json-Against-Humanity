@@ -1,7 +1,8 @@
 class CAHDeck {
   _hydrateCompact(json) {
     let packs = [];
-    for (let pack of json.packs) {
+    const sourcePacks = Array.isArray(json.packs) ? json.packs : Object.values(json.packs);
+    for (let pack of sourcePacks) {
       pack.white = pack.white.map((index) =>
         Object.assign(
           {},
@@ -47,6 +48,21 @@ class CAHDeck {
     n.compactSrc = compactSrc;
     await n._loadDeck();
     return n;
+  }
+
+  static fromCompactJson(json) {
+    let n = new CAHDeck();
+    n._loadDeckFromJson(json);
+    return n;
+  }
+
+  _loadDeckFromJson(json) {
+    this.rawPoolSize = { white: json.white.length, black: json.black.length };
+    this.rawPackIndices = json.packs.map(p => ({
+      white: Array.from(p.white || []),
+      black: Array.from(p.black || []),
+    }));
+    this.deck = this._hydrateCompact(json);
   }
 
   static async fromFull(fullSrc) {
