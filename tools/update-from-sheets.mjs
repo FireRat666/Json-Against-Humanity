@@ -51,7 +51,7 @@ async function saveCredentials(client) {
     const payload = JSON.stringify({
         type: "authorized_user",
         client_id: key.client_id,
-        client_secret: key.credentials.client_secret, // Corrected from key.client_secret
+        client_secret: key.client_secret, // Corrected to key.client_secret
         refresh_token: client.credentials.refresh_token,
     });
     await fs.writeFile(TOKEN_PATH, payload);
