@@ -11,17 +11,19 @@ Finally, [Cards Against Humanity](https://cardsagainsthumanity.com/) as plain te
 
 ### How many cards are there?
 
-There are 83,330 cards available (63,752 unique) from 422 packs.
+There are 83,410 cards available (63,827 unique) from 423 packs.
 
-- That's all 22,597 official cards from 123 products.
+- That's 22,677 official cards from 124 products.
 - Plus 60,733 even worse cards from fans around the world
 
 The unique count removes duplicates that appear in multiple packs: 
-- 49,071 unique response cards and 14,681 unique prompt cards.
+- 49,071 unique response cards and 14,756 unique prompt cards.
 
 ### Wha— where the heck did you find all those cards??
 
-The primary source is this [Card Listing Spreadsheet](https://docs.google.com/spreadsheet/ccc?key=1Pp04v9plwiJwg8u-DrCHd4Fsf9ro3NhxOvISwc0bC4Y&usp=sharing#gid=55). Previous sources included [Hangouts Against Humanity](https://github.com/samurailink3/hangouts-against-humanity), [Pretend You're Xyzzy](http://pyx-3.pretendyoure.xyz/zy/viewcards.jsp), and contributions from viewers like you.
+The primary source are these Spreadsheets [Card Listing Spreadsheet](https://docs.google.com/spreadsheet/ccc?key=1Pp04v9plwiJwg8u-DrCHd4Fsf9ro3NhxOvISwc0bC4Y&usp=sharing#gid=55) && [ManyDecks](https://docs.google.com/spreadsheet/ccc?key=1EYPJRGekPVCwpslVGg-AA_pz_LnNjTocSAgqxO2ZlX0&usp=sharing#gid=55).
+
+The ManyDecks Spreadsheet was created using the public decks from [ManyDecks](https://decks.rereadgames.com/)
 
 ### What font is CAH?
 
@@ -86,7 +88,7 @@ Optimized for file size. Uses a shared pool of cards and references them by inde
 
 Chris Hallberg wrote a small library to handle the compact format: [CAHDeck.js](https://github.com/FireRat666/json-against-humanity/blob/latest/web/CAHDeck.js).
 
-[This](https://jah.firer.at/) website itself is a demonstration of [Ingesting from compact.json](https://github.com/FireRat666/json-against-humanity/blob/latest/web/site.js#L263-L273), [listing decks](https://github.com/FireRat666/json-against-humanity/blob/latest/web/site.js#L53-L89), [combining selected decks](https://github.com/FireRat666/json-against-humanity/blob/latest/web/site.js#L185-L240), and [exporting files](https://github.com/FireRat666/json-against-humanity/blob/latest/web/site.js#L178-L183).
+This website itself is a demonstration of ingesting from compact.json, listing decks, combining selected decks, and exporting files [site.js](https://github.com/FireRat666/json-against-humanity/blob/latest/web/site.js).
 
 ## Fine Print
 
