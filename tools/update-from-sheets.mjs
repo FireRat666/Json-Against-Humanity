@@ -3,6 +3,8 @@ import readline from "readline";
 import cleanTextUtils from "clean-text-utils";
 const replaceExoticChars = cleanTextUtils.replace.exoticChars;
 
+const SPREADSHEET_ID = "1EYPJRGekPVCwpslVGg-AA_pz_LnNjTocSAgqxO2ZlX0"; // ManyDecks // "1Pp04v9plwiJwg8u-DrCHd4Fsf9ro3NhxOvISwc0bC4Y"; // Cards Against Humanity // Your main spreadsheet ID
+
 // For Google
 import fs from "fs/promises";
 import path from "path";
@@ -306,7 +308,7 @@ function extractCardsFromSetBlock(sheetValues, setInfo) {
             // Hard stop conditions for the response block
             // Stop if we hit a set label
             if (effectiveLabel === "set") {
-                if (isDebuggingThisSet) console.log(`  Response Card (Row ${r + 1}, Col ${startCol + 1}): (Stopping response extraction due to label "${effectiveLabel}")`);
+                if (isDebuggingThisSet) console.log(`  Response Card (Row ${r + 1}, Col ${startCol + 1}): (Stopping due to label "${effectiveLabel}")`);
                 break;
             }
 
@@ -470,8 +472,6 @@ function extractMainDeckVersionSets(sheetValues) {
     return newCards;
 }
 
-const SPREADSHEET_ID = "1Pp04v9plwiJwg8u-DrCHd4Fsf9ro3NhxOvISwc0bC4Y"; // Your main spreadsheet ID
-
 async function saveCardsToJSON(auth) {
     console.log("saveCardsToJSON(auth)");
     const sheets = google.sheets({ version: "v4", auth });
@@ -493,7 +493,7 @@ async function saveCardsToJSON(auth) {
         try {
             const indexResponse = await sheets.spreadsheets.values.get({
                 spreadsheetId: SPREADSHEET_ID,
-                range: "Index!A:H", // Assuming the index sheet is named "Index" and covers columns A to H
+                range: "Index!A:M", // Updated range to include Code, Author Name, Language
             });
             indexRows = indexResponse.data.values;
             console.log("Index sheet data fetched from API.");
@@ -520,9 +520,14 @@ async function saveCardsToJSON(auth) {
     const MECHANIC_CARDS_COUNT_COL_INDEX = 5;
     const PROMPT_CARDS_COUNT_COL_INDEX = 6; // 6 for New Spreadsheet, 5 for Old
     const RESPONSE_CARDS_COUNT_COL_INDEX = 7; // 7 for New Spreadsheet, 6 for Old
+    const CODE_COL_INDEX = 10; // Column K
+    const AUTHOR_NAME_COL_INDEX = 11; // Column L
+    const LANGUAGE_COL_INDEX = 12; // Column M
+
 
     for (let i = 1; i < indexRows.length; i++) { // Skip header row
         const row = indexRows[i];
+        // Check: only require columns up to RESPONSE_CARDS_COUNT_COL_INDEX
         if (!row || row.length < RESPONSE_CARDS_COUNT_COL_INDEX + 1) {
             continue; // Skip empty or incomplete rows
         }
@@ -533,6 +538,12 @@ async function saveCardsToJSON(auth) {
         let mechanicCardsCount = parseInt(row[MECHANIC_CARDS_COUNT_COL_INDEX] || '0', 10); // Use let for potential override
         let promptCardsCount = parseInt(row[PROMPT_CARDS_COUNT_COL_INDEX] || '0', 10); // Use let for potential override
         let responseCardsCount = parseInt(row[RESPONSE_CARDS_COUNT_COL_INDEX] || '0', 10); // Use let for potential override
+        
+        // These are optional and will be empty strings if the column doesn't exist or is blank
+        const code = String(row[CODE_COL_INDEX] || '').trim();
+        const authorName = String(row[AUTHOR_NAME_COL_INDEX] || '').trim();
+        const language = String(row[LANGUAGE_COL_INDEX] || '').trim();
+
 
         // --- MANUAL OVERRIDES FOR STARTING CELLS ---
         if (setName === "SETNAMEGOESHERE") {
@@ -562,11 +573,15 @@ async function saveCardsToJSON(auth) {
             const isOfficial = sheetName.startsWith("CAH");
 
             if (!packMap[normalizedSetName]) {
-                packMap[normalizedSetName] = {
+                const newPackEntry = {
                     id: nanoid(),
                     official: isOfficial,
                     sheetName: sheetName, // Store the sheet name here
                 };
+                if (code) newPackEntry.code = code;
+                if (authorName) newPackEntry.author = authorName;
+                if (language) newPackEntry.language = language;
+                packMap[normalizedSetName] = newPackEntry;
             }
 
             const [startRowIndex, startColIndex] = a1ToRowCol(startingCell);
@@ -781,7 +796,7 @@ async function saveCardsToJSON(auth) {
     // (packMap may have grown during extractMainDeckVersionSets, so we always iterate the full map)
     for (let name in packMap) {
         let pack = packMap[name];
-        packs[pack.id] = {
+        const finalPack = {
             name,
             white: [],
             black: [], // Black cards are now only 'prompt' type
@@ -789,6 +804,10 @@ async function saveCardsToJSON(auth) {
             official: pack.official,
             sheetName: pack.sheetName, // Added sheetName to the pack object
         };
+        if (pack.code) finalPack.code = pack.code;
+        if (pack.author) finalPack.author = pack.author;
+        if (pack.language) finalPack.language = pack.language;
+        packs[pack.id] = finalPack;
     }
 
     const finalBlackCards = [];
