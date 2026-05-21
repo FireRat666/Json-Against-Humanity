@@ -22,6 +22,7 @@ The unique count removes duplicates that appear in multiple packs:
 ### Wha— where the heck did you find all those cards??
 
 The primary source are these Spreadsheets [Card Listing Spreadsheet](https://docs.google.com/spreadsheet/ccc?key=1Pp04v9plwiJwg8u-DrCHd4Fsf9ro3NhxOvISwc0bC4Y&usp=sharing#gid=55) && [ManyDecks](https://docs.google.com/spreadsheet/ccc?key=1EYPJRGekPVCwpslVGg-AA_pz_LnNjTocSAgqxO2ZlX0&usp=sharing#gid=55).
+
 The ManyDecks Spreadsheet was created using the public decks from [ManyDecks](https://decks.rereadgames.com/)
 
 ### What font is CAH?
