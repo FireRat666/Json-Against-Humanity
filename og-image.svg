@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a0c0a"/>
+      <stop offset="100%" stop-color="#141a14"/>
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#2bff00"/>
+      <stop offset="100%" stop-color="#00da07"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="cardShadow">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Subtle grid pattern -->
+  <g opacity="0.03">
+    <line x1="0" y1="100" x2="1200" y2="100" stroke="#fff" stroke-width="0.5"/>
+    <line x1="0" y1="200" x2="1200" y2="200" stroke="#fff" stroke-width="0.5"/>
+    <line x1="0" y1="300" x2="1200" y2="300" stroke="#fff" stroke-width="0.5"/>
+    <line x1="0" y1="400" x2="1200" y2="400" stroke="#fff" stroke-width="0.5"/>
+    <line x1="0" y1="500" x2="1200" y2="500" stroke="#fff" stroke-width="0.5"/>
+    <line x1="300" y1="0" x2="300" y2="630" stroke="#fff" stroke-width="0.5"/>
+    <line x1="600" y1="0" x2="600" y2="630" stroke="#fff" stroke-width="0.5"/>
+    <line x1="900" y1="0" x2="900" y2="630" stroke="#fff" stroke-width="0.5"/>
+  </g>
+
+  <!-- Decorative accent line -->
+  <rect x="0" y="0" width="6" height="630" fill="url(#accentGrad)"/>
+
+  <!-- Title section -->
+  <text x="60" y="200" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="64" font-weight="800" fill="#ffffff" letter-spacing="-1.5">JSON Against</text>
+  <text x="60" y="275" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="64" font-weight="800" fill="#2bff00" letter-spacing="-1.5">Humanity</text>
+
+  <!-- Tagline -->
+  <text x="60" y="330" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="20" font-weight="400" fill="#94b895">Finally, Cards Against Humanity® as plain text and JSON.</text>
+  <text x="60" y="358" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="20" font-weight="400" fill="#94b895">Open source, curated, and ready for your next project.</text>
+
+  <!-- Badge -->
+  <rect x="60" y="385" width="200" height="36" rx="18" fill="rgba(43,255,0,0.12)" stroke="#2bff00" stroke-width="1"/>
+  <text x="160" y="409" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="15" font-weight="600" fill="#2bff00" text-anchor="middle">80,000+ cards available</text>
+
+  <!-- Cards illustration -->
+  <!-- Black card (prompt) -->
+  <g transform="translate(700, 100)" filter="url(#cardShadow)">
+    <rect x="0" y="0" width="220" height="320" rx="14" fill="#1a1d1a" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+    <text x="110" y="55" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="12" font-weight="700" fill="#678b64" text-anchor="middle" letter-spacing="2">PROMPT</text>
+    <text x="110" y="130" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="22" font-weight="700" fill="#ffffff" text-anchor="middle">
+      <tspan x="110" dy="0">I got fired from my</tspan>
+      <tspan x="110" dy="32" fill="#2bff00">__________</tspan>
+      <tspan x="110" dy="32">and all I got was</tspan>
+      <tspan x="110" dy="32">this lousy</tspan>
+      <tspan x="110" dy="32" fill="#2bff00">__________</tspan>
+    </text>
+    <text x="40" y="295" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="600" fill="#678b64">BLACK CARD</text>
+  </g>
+
+  <!-- White card (answer) -->
+  <g transform="translate(940, 130) rotate(4)" filter="url(#cardShadow)">
+    <rect x="0" y="0" width="200" height="280" rx="14" fill="#ffffff"/>
+    <text x="100" y="45" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="700" fill="#94b895" text-anchor="middle" letter-spacing="2">ANSWER</text>
+    <text x="100" y="110" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="19" font-weight="700" fill="#0a0c0a" text-anchor="middle">
+      <tspan x="100" dy="0">A really good</tspan>
+      <tspan x="100" dy="30">chocolate cake</tspan>
+      <tspan x="100" dy="30">recipe</tspan>
+    </text>
+    <text x="30" y="255" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-size="10" font-weight="600" fill="#94b895">WHITE CARD</text>
+  </g>
+
+  <!-- Decorative dots -->
+  <circle cx="1100" cy="30" r="3" fill="#2bff00" opacity="0.3"/>
+  <circle cx="650" cy="550" r="4" fill="#2bff00" opacity="0.2"/>
+  <circle cx="1150" cy="600" r="2" fill="#2bff00" opacity="0.4"/>
+  <circle cx="50" cy="570" r="3" fill="#2bff00" opacity="0.15"/>
+
+  <!-- GitHub corner marker -->
+  <text x="60" y="580" font-family="'Courier New', monospace" font-size="14" fill="#678b64">github.com/FireRat666/json-against-humanity</text>
+</svg>
