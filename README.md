@@ -11,13 +11,13 @@ Finally, [Cards Against Humanity](https://cardsagainsthumanity.com/) as plain te
 
 ### How many cards are there?
 
-There are 83,410 cards available (63,827 unique) from 423 packs.
+There are 84,306 cards available (64,545 unique) from 427 packs.
 
-- That's 22,677 official cards from 124 products.
-- Plus 60,733 even worse cards from fans around the world
+- That's 23,573 official cards from 128 products.
+- Plus 60,733 even worse cards from fans around the world.
 
 The unique count removes duplicates that appear in multiple packs: 
-- 49,071 unique response cards and 14,756 unique prompt cards.
+- 49,701 unique response cards and 14,844 unique prompt cards.
 
 ### Wha— where the heck did you find all those cards??
 
