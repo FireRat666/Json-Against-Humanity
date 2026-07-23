@@ -7,6 +7,40 @@
 
 Finally, [Cards Against Humanity](https://cardsagainsthumanity.com/) as plain text and JSON.
 
+## Usage: update cards from Google Sheets
+
+The card data is sourced from [Google Sheets](https://docs.google.com/spreadsheets/d/1Pp04v9plwiJwg8u-DrCHd4Fsf9ro3NhxOvISwc0bC4Y/). The script `tools/update-from-sheets.mjs` fetches, parses, and generates `cah-all-compact.json`.
+
+### Prerequisites
+
+- Node.js
+
+### Setup
+
+1. Install dependencies:
+   ```
+   npm install
+   ```
+
+2. **Obtain Google API credentials.** The script uses OAuth 2.0 to read the private spreadsheet. You need a `credentials.json` file in `tools/`:
+   - Go to the [Google Cloud Console](https://console.cloud.google.com/)
+   - Create a project (or select an existing one)
+   - Enable the [Google Sheets API](https://console.cloud.google.com/apis/library/sheets.googleapis.com)
+   - Go to [Credentials](https://console.cloud.google.com/apis/credentials), click **+ Create Credentials** → **OAuth client ID**
+   - Choose **Desktop app** as the application type
+   - Download the JSON file and rename it to `credentials.json`
+   - Place it in `tools/credentials.json` (this path is gitignored)
+
+### Run
+
+```
+npm run update-cards
+```
+
+On first run, the script opens a browser for OAuth authorization. After approval, a `tools/token.json` file is saved for subsequent runs.
+
+The script caches sheet data in `temp_sheet_data/` to speed up repeated runs. Delete that directory to force a fresh fetch from the API.
+
 ## FAQ
 
 ### How many cards are there?
