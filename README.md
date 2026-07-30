@@ -1,141 +1,137 @@
-[![CC BY-NC-SA 4.0][cc-by-nc-sa-shield]][cc-by-nc-sa]
-
-[cc-by-nc-sa]: http://creativecommons.org/licenses/by-nc-sa/4.0/
-[cc-by-nc-sa-shield]: https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg
-
 # [JSON Against Humanity](https://jah.firer.at/)
 
-Finally, [Cards Against Humanity](https://cardsagainsthumanity.com/) as plain text and JSON.
+[![CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/FireRat666/json-against-humanity/issues)
 
-## FAQ
+Finally, [Cards Against Humanity](https://cardsagainsthumanity.com/) compiled and organized as clean plain text and structured JSON. 
 
-### How many cards are there?
+This repository contains tools and datasets for the complete Cards Against Humanity card corpus, aggregating over **64,000+ unique cards** across **420+ official and fan-made packs**.
 
-There are 84,306 cards available (64,545 unique) from 427 packs.
+Check out the web interface demo at [jah.firer.at](https://jah.firer.at/) to browse, search, filter, combine, and export packs!
 
-- That's 23,573 official cards from 128 products.
-- Plus 60,733 even worse cards from fans around the world.
+---
 
-The unique count removes duplicates that appear in multiple packs: 
-- 49,701 unique response cards and 14,844 unique prompt cards.
+## Key Features
 
-### Wha— where the heck did you find all those cards??
+* **Aggregated Card Corpus**: Consolidates official sets, discontinued expansions, limited holiday releases, PAX promo decks, third-party commercial cards, and fan expansions side-by-side.
+* **Intelligent Deduplication**: Automatically deduplicates card text globally and inside individual packs, meaning the data loads cleanly into relational databases (like SQLite or Postgres) with unique relational constraints.
+* **Text Normalization**: Exotic unicode characters, quote marks, and spaces are normalized and cleaned up.
+* **Optimized Formats**: Includes both flat-file JSON formats (`full.json`) and a highly-optimized indexed format (`compact.json`) that saves bandwidth by referencing a shared card pool.
+* **Active Sheets Builder**: Includes a Node.js utility to fetch, parse, validate, and build the card datasets directly from public Google Spreadsheets.
 
-The primary source are these Spreadsheets [Card Listing Spreadsheet](https://docs.google.com/spreadsheet/ccc?key=1Pp04v9plwiJwg8u-DrCHd4Fsf9ro3NhxOvISwc0bC4Y&usp=sharing#gid=55) && [ManyDecks](https://docs.google.com/spreadsheet/ccc?key=1EYPJRGekPVCwpslVGg-AA_pz_LnNjTocSAgqxO2ZlX0&usp=sharing#gid=55).
+---
 
-The ManyDecks Spreadsheet was created using the public decks from [ManyDecks](https://decks.rereadgames.com/)
+## File Formats
 
-### What font is CAH?
+### 1. Compact JSON (`cah-all-compact.json`)
+Optimized for minimum file size and web deployment. It uses a shared pool of unique white, black (prompt), and mechanic cards. Individual packs reference these cards by their index positions in the global arrays.
 
-Cards Against Humanity® cards are printed in [Helvetica® Neue](https://www.myfonts.com/fonts/linotype/neue-helvetica/). It's not free. For this site, we use [Inter Medium](https://rsms.me/inter/). You're looking at it now.
-
-### Who maintains this?
-
-[FireRat](https://firer.at/), Feel free to [open an issue](https://github.com/FireRat666/json-against-humanity/issues) if you have questions or feedback.
-
-## File formats
-
-### Plaintext
-
-Simple and easy to read. One card per line.
-
+```json
+{
+  "white": [
+    "Being black.",
+    "Irritable Bowel Syndrome.",
+    "A room full of nightmares."
+  ],
+  "black": [
+    { "text": "Next from J.K. Rowling: Harry Potter and the chamber of _.", "pick": 1 }
+  ],
+  "mechanic": [
+    "The Ultimate TRUMP Card"
+  ],
+  "packs": [
+    {
+      "name": "Babies Against Parenthood",
+      "official": false,
+      "sheetName": "Fan Expansions",
+      "white": [2],
+      "black": [0],
+      "mechanic": [0],
+      "code": "BAP",
+      "author": "John Doe",
+      "language": "en"
+    }
+  ]
+}
 ```
-White, answer cards.
-Putting a new card on each line.
-Adding a divider after the white cards.
-----------
-I love it when my _ are in plaintext.
-```
 
-### full.json
+### 2. Full JSON (`cah-all-full.json`)
+A straightforward format where every pack object is fully self-contained. Card text is fully duplicated inside each pack, making it extremely easy to parse in simple client scripts.
 
 ```json
 [
   {
-    "name": "The Base Set",
+    "name": "Cards Against Humanity: Main Deck (All Versions)",
     "official": true,
-    "white": [ { "text": "Answer...", "pack": 0 } ],
-    "black": [ { "text": "_Prompt_ cards\nwith _ for blanks!", "pick": 1, "pack": {pack index} } ]
-  },
-  { "white": [ { "pack": 1 }, ... ], ... },
-  { "white": [ { "pack": 2 }, ... ], ... }
+    "white": [
+      { "text": "Being black.", "pack": 0 }
+    ],
+    "black": [
+      { "text": "Next from J.K. Rowling: Harry Potter and the chamber of _.", "pick": 1, "pack": 0 }
+    ]
+  }
 ]
 ```
 
-### compact.json
+### 3. Plaintext (`cah-all-compact.txt`)
+Ideal for grep queries or simple text processing. White cards and black cards are separated by a divider, with one card printed per line:
 
-Optimized for file size. Uses a shared pool of cards and references them by index.
-
-```json
-{
-  "white": ["Answer cards in plain text, formatted with **Markdown**"],
-  "black": [
-    { "text": "_Prompt_ cards\nformatted with _.", "pick": 1 },
-    { "text": "I want a _ **and** _ sandwich! No corners!", "pick": 2 }
-  ],
-  "packs": {
-    "abbreviation": {
-      "name": "The Base Set",
-      "official": true,
-      "white": [0, 1, 2, "indexes for every white card in this pack"],
-      "black": [0, 1, 2, "indexes for every black card in this pack"]
-    }
-  }
-}
+```text
+White, answer cards.
+Another white card on this line.
+----------
+I love it when my _ are in plaintext.
 ```
 
-## Integration
+---
 
-Chris Hallberg wrote a small library to handle the compact format: [CAHDeck.js](https://github.com/FireRat666/json-against-humanity/blob/latest/web/CAHDeck.js).
+## Card Extraction & Sheets Parser
 
-This website itself is a demonstration of ingesting from compact.json, listing decks, combining selected decks, and exporting files [site.js](https://github.com/FireRat666/json-against-humanity/blob/latest/web/site.js).
+The card database is compiled from the community's Google Sheets (like the [Card Listing Spreadsheet](https://docs.google.com/spreadsheets/d/1Pp04v9plwiJwg8u-DrCHd4Fsf9ro3NhxOvISwc0bC4Y/) and the [ManyDecks spreadsheet](https://docs.google.com/spreadsheets/d/1EYPJRGekPVCwpslVGg-AA_pz_LnNjTocSAgqxO2ZlX0/)).
 
-## Usage: update cards from Google Sheets
-
-The card data is sourced from [Google Sheets](https://docs.google.com/spreadsheets/d/1Pp04v9plwiJwg8u-DrCHd4Fsf9ro3NhxOvISwc0bC4Y/). The script `tools/update-from-sheets.mjs` fetches, parses, and generates `cah-all-compact.json`.
+You can run the script under `tools/update-from-sheets.mjs` to fetch sheet columns, validate card counts against the Index, deduplicate records, and rebuild `cah-all-compact.json`.
 
 ### Prerequisites
+* [Node.js](https://nodejs.org/) (v16+)
 
-- Node.js
+### Setup Google OAuth Credentials
+The script uses OAuth 2.0 to access the Google Sheets API:
+1. Go to the [Google Cloud Console](https://console.cloud.google.com/).
+2. Create or select a project and enable the **Google Sheets API**.
+3. Create credentials: click **+ Create Credentials** → **OAuth client ID** (Application type: **Desktop app**).
+4. Download the client secret JSON file, rename it to `credentials.json`, and place it in the project root as `tools/credentials.json`. (This file is ignored by git).
 
-### Setup
-
-1. Install dependencies:
-   ```
-   npm install
-   ```
-
-2. **Obtain Google API credentials.** The script uses OAuth 2.0 to read the private spreadsheet. You need a `credentials.json` file in `tools/`:
-   - Go to the [Google Cloud Console](https://console.cloud.google.com/)
-   - Create a project (or select an existing one)
-   - Enable the [Google Sheets API](https://console.cloud.google.com/apis/library/sheets.googleapis.com)
-   - Go to [Credentials](https://console.cloud.google.com/apis/credentials), click **+ Create Credentials** → **OAuth client ID**
-   - Choose **Desktop app** as the application type
-   - Download the JSON file and rename it to `credentials.json`
-   - Place it in `tools/credentials.json` (this path is gitignored)
-
-### Run
-
-```
+### Pull and Process Decks
+To build the dataset:
+```bash
+npm install
 npm run update-cards
 ```
+* **First Run**: The script will launch a browser window asking you to authenticate with Google. Once authorized, it will save `tools/token.json` so you do not need to authenticate again.
+* **Caching**: Sheet data is cached under `temp_sheet_data/` to make subsequent runs much faster. To force a complete fetch from the API, delete the `temp_sheet_data/` directory.
+* **Deduplication Warnings**: During compilation, any duplicate cards found within a single pack are automatically skipped. The compiler prints out a warning detailing the exact cell coordinates (e.g. `cell=Etsy!G3182`), making it easy to identify and clean up the spreadsheet.
 
-On first run, the script opens a browser for OAuth authorization. After approval, a `tools/token.json` file is saved for subsequent runs.
+---
 
-The script caches sheet data in `temp_sheet_data/` to speed up repeated runs. Delete that directory to force a fresh fetch from the API.
+## Web Integration
 
-## Fine Print
+A lightweight helper library is provided under `web/CAHDeck.js` to parse the compact indexed JSON format and reconstitute it in client-side Javascript.
 
-This project is free, open-source, and provided as-is.
+The website itself (code in `web/site.js`) is an example implementation of:
+1. Fetching and loading `cah-all-compact.json`.
+2. Rendering available card packs and allowing users to select/deselect them.
+3. Combining the selected decks in-memory.
+4. Exporting combined card collections to plain text or JSON files.
 
-### Is this legal?
+---
 
-Yes. Cards Against Humanity® is distributed under a [Creative Commons BY-NC-SA 4.0 license](https://creativecommons.org/licenses/by-nc-sa/4.0/). I think their website puts it best:
+## Legal & Creative Commons Licensing
 
-> We give you permission to use the Cards Against Humanity® writing under a limited Creative Commons BY-NC-SA 4.0 license. That means you can use our writing if (and only if) you do all of these things:
->
-> 1.  Make your work available totally for free.
-> 2.  Share your work with others under the same Creative Commons license that we use.
-> 3.  Give us credit in your project.
+This project is free, open-source, and provided under the CC BY-NC-SA 4.0 license.
 
-If you have questions or paperwork that says otherwise, contact me, we can work this out.
+Cards Against Humanity® is distributed under a [Creative Commons BY-NC-SA 4.0 license](https://creativecommons.org/licenses/by-nc-sa/4.0/). You can copy, modify, and redistribute their content as long as you:
+1. Make your work available **completely for free**.
+2. Share it under the same Creative Commons license (CC BY-NC-SA 4.0).
+3. Provide attribution to Cards Against Humanity.
+
+If you have questions, feedback, or need to report any issues, please [open a GitHub issue](https://github.com/FireRat666/Json-Against-Humanity/issues).
