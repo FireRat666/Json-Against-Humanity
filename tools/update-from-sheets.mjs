@@ -3,7 +3,7 @@ import readline from "readline";
 import cleanTextUtils from "clean-text-utils";
 const replaceExoticChars = cleanTextUtils.replace.exoticChars;
 
-const SPREADSHEET_ID = "1EYPJRGekPVCwpslVGg-AA_pz_LnNjTocSAgqxO2ZlX0"; // ManyDecks // "1Pp04v9plwiJwg8u-DrCHd4Fsf9ro3NhxOvISwc0bC4Y"; // Cards Against Humanity // Your main spreadsheet ID
+const SPREADSHEET_ID = "1Pp04v9plwiJwg8u-DrCHd4Fsf9ro3NhxOvISwc0bC4Y"; // Cards Against Humanity // "1EYPJRGekPVCwpslVGg-AA_pz_LnNjTocSAgqxO2ZlX0"; // ManyDecks // Your main spreadsheet ID
 
 // For Google
 import fs from "fs/promises";
@@ -100,6 +100,17 @@ function a1ToRowCol(a1) {
         col = col * 26 + (colStr.charCodeAt(i) - 'A'.charCodeAt(0) + 1);
     }
     return [rowNum - 1, col - 1]; // Convert to 0-indexed
+}
+
+// Helper to convert 0-indexed row/col to A1 notation
+function rowColToA1(row0, col0) {
+    let label = '';
+    let temp = col0;
+    while (temp >= 0) {
+        label = String.fromCharCode((temp % 26) + 65) + label;
+        temp = Math.floor(temp / 26) - 1;
+    }
+    return `${label}${row0 + 1}`;
 }
 
 
@@ -200,7 +211,10 @@ function extractCardsFromSetBlock(sheetValues, setInfo) {
                     packId,
                     replaceExoticChars(cardText),
                     null, // Mechanic cards don't have a pick count
-                    'mechanic'
+                    'mechanic',
+                    r + 1,
+                    startCol + 2,
+                    setInfo.sheetName
                 ]);
                 currentMechanicCardCount++;
                 if (isDebuggingThisSet) console.log(`  Mechanic Card ${currentMechanicCardCount} (Row ${r + 1}, Col ${startCol + 2}): "${cardText}"`);
@@ -273,7 +287,10 @@ function extractCardsFromSetBlock(sheetValues, setInfo) {
                         packId,
                         replaceExoticChars(cardText.replace(/_+/g, "_")),
                         pickCount,
-                        'prompt'
+                        'prompt',
+                        r + 1,
+                        startCol + 2,
+                        setInfo.sheetName
                     ]);
                     if (isDebuggingThisSet) console.log(`  Prompt Card ${extractedPromptCards + 1} (Row ${r + 1}, Col ${startCol + 2}): "${cardText}"`);
                     extractedPromptCards++;
@@ -331,7 +348,10 @@ function extractCardsFromSetBlock(sheetValues, setInfo) {
                         packId,
                         replaceExoticChars(cardText),
                         null, // Response cards don't have a pick count
-                        'response'
+                        'response',
+                        r + 1,
+                        startCol + 2,
+                        setInfo.sheetName
                     ]);
                     if (isDebuggingThisSet) console.log(`  Response Card ${extractedResponseCards + 1} (Row ${r + 1}, Col ${startCol + 2}): "${cardText}"`);
                     extractedResponseCards++;
@@ -460,9 +480,9 @@ function extractMainDeckVersionSets(sheetValues) {
                 } else if (cardText === "Make a haiku.") {
                     pickCount = 3;
                 }
-                newCards.push([vc.packId, replaceExoticChars(cardText.replace(/_+/g, "_")), pickCount, 'prompt']);
+                newCards.push([vc.packId, replaceExoticChars(cardText.replace(/_+/g, "_")), pickCount, 'prompt', r + 1, 2, "CAH Main Deck"]);
             } else { // response
-                newCards.push([vc.packId, replaceExoticChars(cardText), null, 'response']);
+                newCards.push([vc.packId, replaceExoticChars(cardText), null, 'response', r + 1, 2, "CAH Main Deck"]);
             }
         }
     }
@@ -828,11 +848,16 @@ async function saveCardsToJSON(auth) {
         const textLower = text.toLowerCase();
         const cardType = card[3];
         const packId = card[0];
+        const rowIndex = card[4];
+        const colIndex = card[5];
+        const sheetName = card[6];
 
         if (!packs[packId]) {
             console.warn(`Pack ID ${packId} not found for card: ${text}`);
             continue;
         }
+
+        const cellRef = (rowIndex && colIndex && sheetName) ? `${sheetName}!${rowColToA1(rowIndex - 1, colIndex - 1)}` : 'Unknown Cell';
 
         if (cardType === 'prompt') {
             const pick = card[2];
@@ -846,6 +871,13 @@ async function saveCardsToJSON(auth) {
                 cardIndex = finalBlackCards.length - 1;
                 blackMap.set(key, cardIndex);
             }
+
+            // Deduplicate inside the pack
+            if (packs[packId].black.includes(cardIndex)) {
+                console.warn(`WARNING: Duplicate card removed from pack "${packs[packId].name}": type="Black", text="${text}", cell=${cellRef}`);
+                continue;
+            }
+
             packs[packId].black.push(cardIndex);
             totalSavedCount++;
 
@@ -858,6 +890,13 @@ async function saveCardsToJSON(auth) {
                 cardIndex = finalWhiteCards.length - 1;
                 whiteMap.set(textLower, cardIndex);
             }
+
+            // Deduplicate inside the pack
+            if (packs[packId].white.includes(cardIndex)) {
+                console.warn(`WARNING: Duplicate card removed from pack "${packs[packId].name}": type="White", text="${text}", cell=${cellRef}`);
+                continue;
+            }
+
             packs[packId].white.push(cardIndex);
             totalSavedCount++;
 
@@ -870,6 +909,13 @@ async function saveCardsToJSON(auth) {
                 cardIndex = finalMechanicCards.length - 1;
                 mechanicMap.set(textLower, cardIndex);
             }
+
+            // Deduplicate inside the pack
+            if (packs[packId].mechanic.includes(cardIndex)) {
+                console.warn(`WARNING: Duplicate card removed from pack "${packs[packId].name}": type="Mechanic", text="${text}", cell=${cellRef}`);
+                continue;
+            }
+
             packs[packId].mechanic.push(cardIndex);
             totalSavedCount++;
         }

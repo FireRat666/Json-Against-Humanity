@@ -2,6 +2,9 @@
 tools/credentials.json
 tools/token.json
 
+# Temporary files
+*/temp_sheet_data/*
+
 # Dependency directories
 node_modules/
 
